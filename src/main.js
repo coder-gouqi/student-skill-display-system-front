@@ -11,7 +11,6 @@ import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
-//使用英文UI
 Vue.use(ElementUI, { locale });
 Vue.use(VueQuillEditor,);
 Vue.config.productionTip = false;

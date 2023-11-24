@@ -6,4 +6,5 @@
 ![ElementUI](https://img.shields.io/badge/elementui-2.11.0-blue.svg)
 ![Axios](https://img.shields.io/badge/Axios-1.5.1-red.svg)
 
-后端代码地址：
+后端代码地址：https://gitee.com/meetingbaoabo/student-skill-display-system-backend
+

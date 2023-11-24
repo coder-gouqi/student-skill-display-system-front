@@ -20,9 +20,24 @@ export default new Router({
                     meta: { title: '欢迎页' }
                 },
                 {
-                    path: '/user',
-                    component: () => import(/* webpackChunkName: "form" */ '../components/page/User.vue'),
-                    meta: { title: '用户' }
+                    path: '/student',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Student.vue'),
+                    meta: { title: '学生管理' }
+                },
+                {
+                    path: '/score',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Score.vue'),
+                    meta: { title: '学生成绩管理' }
+                },
+                {
+                    path: '/academy',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Academy.vue'),
+                    meta: { title: '学院管理' }
+                },
+                {
+                    path: '/skillIndex',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/SkillIndex.vue'),
+                    meta: { title: '技能指标' }
                 },
                 {
                     path: '/404',

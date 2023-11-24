@@ -4,7 +4,7 @@
             class='sidebar-el-menu'
             :default-active='onRoutes'
             :collapse='collapse'
-            background-color='#304156'
+            background-color='#0C102D'
             text-color='#BFCBD9'
             active-text-color='#409EEC'
             router
@@ -59,14 +59,34 @@ export default {
             collapse: false,
             items: [
                 {
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-home',
                     index: 'welcome',
                     title: '欢迎页'
                 },
                 {
-                    icon: 'el-icon-lx-home',
-                    index: 'user',
-                    title: '用户'
+                    icon: 'el-icon-reading',
+                    index: 'student',
+                    title: '学生管理'
+                },
+                {
+                    icon: 'el-icon-document',
+                    index: 'score',
+                    title: '学生成绩管理'
+                },
+                {
+                    icon: 'el-icon-office-building',
+                    index: 'academy',
+                    title: '学院管理'
+                },
+                {
+                    icon: 'el-icon-s-flag',
+                    index: 'skillIndex',
+                    title: '技能指标'
+                },
+                {
+                    icon: 'el-icon-s-data',
+                    index: 'skillLevel',
+                    title: '技能等级'
                 }
             ]
         };
