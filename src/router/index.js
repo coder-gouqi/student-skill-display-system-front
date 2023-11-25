@@ -40,6 +40,11 @@ export default new Router({
                     meta: { title: '技能指标' }
                 },
                 {
+                    path: '/skillLevel',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/SkillLevel.vue'),
+                    meta: { title: '技能等级' }
+                },
+                {
                     path: '/404',
                     component: () => import(/* webpackChunkName: "404" */ '../components/page/404.vue'),
                     meta: { title: '找不到页面' }

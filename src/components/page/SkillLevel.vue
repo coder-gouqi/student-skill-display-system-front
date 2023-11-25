@@ -3,7 +3,7 @@
         <div class='crumbs'>
             <el-breadcrumb separator='/'>
                 <el-breadcrumb-item>
-                    <i class='el-icon-lx-cascades'></i> 技能指标管理
+                    <i class='el-icon-lx-cascades'></i> 技能等级管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -13,19 +13,20 @@
                     type='primary'
                     class='handle-del mr10'
                     @click='handleAdd'
-                >添加技能指标
+                >添加技能等级
                 </el-button>
             </div>
             <el-table
-                :data='skillIndexList'
+                :data='skillLevelList'
                 border
                 class='table'
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='s_id' label='技能指标id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='s_name' label='技能指标名称' align='center'></el-table-column>
-                <el-table-column prop='s_weight' label='权重' align='center'></el-table-column>
+                <el-table-column prop='s_id' label='技能等级id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='s_level' label='技能等级' align='center'></el-table-column>
+                <el-table-column prop='s_left' label='开始值' align='center'></el-table-column>
+                <el-table-column prop='s_right' label='结束值' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -59,11 +60,14 @@
         <!-- 添加弹出框 -->
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
-                <el-form-item label='技能指标'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
+                <el-form-item label='技能等级'>
+                    <el-input v-model='form.s_level' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
-                <el-form-item label='权重'>
-                    <el-input v-model='form.s_weight' @change='isChange' style='width: 360px'></el-input>
+                <el-form-item label='开始值'>
+                    <el-input v-model='form.s_left' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
+                <el-form-item label='结束值'>
+                    <el-input v-model='form.s_right' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -75,11 +79,14 @@
         <!-- 编辑弹出框 -->
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
-                <el-form-item label='技能指标名称'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
+                <el-form-item label='技能等级'>
+                    <el-input v-model='form.s_level' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
-                <el-form-item label='权重'>
-                    <el-input v-model='form.s_weight' @change='isChange' style='width: 360px'></el-input>
+                <el-form-item label='开始值'>
+                    <el-input v-model='form.s_left' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
+                <el-form-item label='结束值'>
+                    <el-input v-model='form.s_right' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -95,7 +102,7 @@
 import { itemAdd, itemDelete, itemQuery, itemUpdate } from '../../api/http';
 
 export default {
-    name: 'skillIndex',
+    name: 'skillLevel',
     data() {
         return {
             query: {
@@ -105,13 +112,14 @@ export default {
                 sortOrder: 'ascend'
             },
             id: '',
-            skillIndexList: [],
+            skillLevelList: [],
             editVisible: false,
             addVisible: false,
             form: {
                 s_id: '',
-                s_name: '',
-                s_weight: '',
+                s_level: '',
+                s_left: '',
+                s_right: '',
                 isChange: false
             },
             idx: -1,
@@ -124,14 +132,15 @@ export default {
     methods: {
         getData() {
             itemQuery(this.query).then(res => {
-                this.skillIndexList = res.data.records;
+                this.skillLevelList = res.data.records;
                 this.total = res.data.total || 0;
             });
         },
         clearForm() {
             this.form.s_id = '';
-            this.form.s_name = '';
-            this.form.s_weight = '';
+            this.form.s_level = '';
+            this.form.s_left = '';
+            this.form.s_right = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -143,7 +152,7 @@ export default {
                     itemDelete(row).then((res) => {
                         if (res.code == 1) {
                             this.$message.success('删除成功');
-                            this.skillIndexList.splice(index, 1);
+                            this.skillLevelList.splice(index, 1);
                         } else {
                             this.$message.error('删除失败');
                         }
@@ -159,14 +168,14 @@ export default {
             this.$set(this.form);
         },
         saveAdd() {
-            if (this.form.isUpload || this.form.isChange) {
+            if (this.form.isChange) {
                 this.addVisible = false;
                 itemAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
                         this.getData();
                         this.clearForm();
-                        this.$set(this.skillIndexList, this.form);
+                        this.$set(this.skillLevelList, this.form);
                     }
                 });
             } else {
@@ -182,8 +191,9 @@ export default {
             this.editVisible = true;
             this.idx = index;
             this.form.s_id = row.s_id;
-            this.form.s_name = row.s_name;
-            this.form.s_weight = row.s_weight;
+            this.form.s_level = row.s_level;
+            this.form.s_left = row.s_left;
+            this.form.s_right = row.s_right;
             this.form.isChange = false;
             this.$set(this.form);
         },
@@ -196,7 +206,7 @@ export default {
                         this.$message.success('更新失败');
                         this.getData();
                         this.clearForm();
-                        this.$set(this.skillIndexList, this.form);
+                        this.$set(this.skillLevelList, this.form);
                     } else {
                         this.$message.error('更新失败');
                     }
@@ -219,6 +229,7 @@ export default {
 </script>
 
 <style scoped>
+
 
 .handle-box {
     margin-bottom: 20px;

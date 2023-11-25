@@ -154,7 +154,7 @@
 
 <script>
 
-import { hostUrl, itemAdd, itemDelete, itemQuery, itemUpdate, itemUpload } from '../../api/http';
+import { DataList, hostUrl, itemAdd, itemDelete, itemQuery, itemUpdate, itemUpload } from '../../api/http';
 
 export default {
     name: 'student',
@@ -197,6 +197,9 @@ export default {
             return hostUrl + scope.row.photoUrl;
         },
         getData() {
+            // DataList().then(res => {
+            //     console.log(res);
+            // });
             itemQuery(this.query).then(res => {
                 this.studentList = res.data.records;
                 this.total = res.data.total || 0;

@@ -11,7 +11,7 @@ const request = axios.create({
 });
 
 //线上图片访问地址
-export const hostUrl = 'http://xx.xx.xx.xx/';
+export const hostUrl = 'http://localhost:8080/api/';
 
 /**
  * 封装get方法
@@ -54,5 +54,7 @@ export const itemDelete = (params) => post('/item/delete', params);
 export const itemQuery = (params) => post('/item/list/page', params);
 
 export const itemUpload = (params) => post('/file/upload', params);
+
+export const DataList = () => get('/data/list');
 
 export default request;
