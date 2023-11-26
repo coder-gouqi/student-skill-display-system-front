@@ -87,6 +87,11 @@ export default {
                     icon: 'el-icon-s-data',
                     index: 'skillLevel',
                     title: '技能等级'
+                },
+                {
+                    icon: 'el-icon-user',
+                    index: 'personalInfo',
+                    title: '个人信息管理'
                 }
             ]
         };

@@ -45,6 +45,11 @@ export default new Router({
                     meta: { title: '技能等级' }
                 },
                 {
+                    path: '/personalInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/PersonalInfo.vue'),
+                    meta: { title: '个人信息管理' }
+                },
+                {
                     path: '/404',
                     component: () => import(/* webpackChunkName: "404" */ '../components/page/404.vue'),
                     meta: { title: '找不到页面' }

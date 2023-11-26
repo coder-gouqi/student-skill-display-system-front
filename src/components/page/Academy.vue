@@ -133,7 +133,8 @@
 
 <script>
 
-import { hostUrl, itemAdd, itemDelete, itemQuery, itemUpdate, itemUpload } from '../../api/http';
+import { academyAdd, academyDelete, academyQuery, academyUpdate, academyUpload } from '../../api/academy';
+import { hostUrl } from '@/api/http';
 
 export default {
     name: 'academy',
@@ -169,10 +170,11 @@ export default {
     },
     methods: {
         getBaseURLToList(scope) {
-            return hostUrl + scope.row.photoUrl;
+            // return hostUrl + scope.row.photoUrl;
+            return scope.row.photoUrl;
         },
         getData() {
-            itemQuery(this.query).then(res => {
+            academyQuery(this.query).then(res => {
                 this.academyList = res.data.records;
                 this.total = res.data.total || 0;
             });
@@ -193,7 +195,7 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    itemDelete(row).then((res) => {
+                    academyDelete(row).then((res) => {
                         if (res.code == 1) {
                             this.$message.success('删除成功');
                             this.academyList.splice(index, 1);
@@ -215,7 +217,7 @@ export default {
             if (this.form.isUpload || this.form.isChange) {
                 this.addVisible = false;
                 this.form.photoUrl = this.TempPhotoUrl;
-                itemAdd(this.form).then((res) => {
+                academyAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
                         this.getData();
@@ -235,7 +237,8 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.photoUrl = hostUrl + row.photoUrl;
+            // this.form.photoUrl = hostUrl + row.photoUrl;
+            this.form.photoUrl = row.photoUrl;
             this.form.a_id = row.a_id;
             this.form.a_name = row.a_name;
             this.form.a_info = row.a_info;
@@ -254,7 +257,7 @@ export default {
                     const reg = new RegExp(hostUrl, '');
                     this.form.photoUrl = str.replace(reg, '');
                 }
-                itemUpdate(this.form).then((res) => {
+                academyUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新失败');
                         this.getData();
@@ -287,7 +290,7 @@ export default {
             const form = new FormData();
             form.append('file', this.file);
             this.form.isUpload = true;
-            await itemUpload(form).then((res) => {
+            await academyUpload(form).then((res) => {
                 this.TempPhotoUrl = res;
                 this.$message.success('上传成功');
             }).catch(() => {

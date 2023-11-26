@@ -99,7 +99,7 @@
 
 <script>
 
-import { itemAdd, itemDelete, itemQuery, itemUpdate } from '../../api/http';
+import { skillLevelAdd, skillLevelDelete, skillLevelQuery, skillLevelUpdate } from '../../api/skillLevel';
 
 export default {
     name: 'skillLevel',
@@ -131,7 +131,7 @@ export default {
     },
     methods: {
         getData() {
-            itemQuery(this.query).then(res => {
+            skillLevelQuery(this.query).then(res => {
                 this.skillLevelList = res.data.records;
                 this.total = res.data.total || 0;
             });
@@ -149,7 +149,7 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    itemDelete(row).then((res) => {
+                    skillLevelDelete(row).then((res) => {
                         if (res.code == 1) {
                             this.$message.success('删除成功');
                             this.skillLevelList.splice(index, 1);
@@ -170,7 +170,7 @@ export default {
         saveAdd() {
             if (this.form.isChange) {
                 this.addVisible = false;
-                itemAdd(this.form).then((res) => {
+                skillLevelAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
                         this.getData();
@@ -201,7 +201,7 @@ export default {
         saveEdit() {
             if (this.form.isChange) {
                 this.editVisible = false;
-                itemUpdate(this.form).then((res) => {
+                skillLevelUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新失败');
                         this.getData();
