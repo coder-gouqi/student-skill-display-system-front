@@ -22,7 +22,12 @@ export default new Router({
                 {
                     path: '/student',
                     component: () => import(/* webpackChunkName: "form" */ '../components/page/Student.vue'),
-                    meta: { title: '学生管理' }
+                    meta: { title: '学生信息管理' }
+                },
+                {
+                    path: '/course',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Course.vue'),
+                    meta: { title: '课程信息管理' }
                 },
                 {
                     path: '/score',
@@ -32,7 +37,7 @@ export default new Router({
                 {
                     path: '/academy',
                     component: () => import(/* webpackChunkName: "form" */ '../components/page/Academy.vue'),
-                    meta: { title: '学院管理' }
+                    meta: { title: '学院信息管理' }
                 },
                 {
                     path: '/skillIndex',
@@ -43,6 +48,11 @@ export default new Router({
                     path: '/skillLevel',
                     component: () => import(/* webpackChunkName: "form" */ '../components/page/SkillLevel.vue'),
                     meta: { title: '技能等级' }
+                },
+                {
+                    path: '/skill',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Skill.vue'),
+                    meta: { title: '技能展示' }
                 },
                 {
                     path: '/personalInfo',

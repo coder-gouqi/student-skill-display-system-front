@@ -10,6 +10,7 @@ export const StudentData = Mock.mock(hostUrl + 'student/list/page', 'post', {
         'records|1-10':
             [
                 {
+                    's_id': Random.integer(1000000000, 9999999999),
                     's_name': Random.string(5),
                     's_number': Random.integer(2021121000, 2021121999),
                     's_academy': Random.string(10),
@@ -23,6 +24,23 @@ export const StudentData = Mock.mock(hostUrl + 'student/list/page', 'post', {
     'msg': 'ok'
 });
 
+
+export const courseData = Mock.mock(hostUrl + 'course/list/page', 'post', {
+    'code': '200',
+    'data': {
+        'records|1-10':
+            [
+                {
+                    'c_id': Random.integer(1000000000, 9999999999),
+                    'c_name': Random.string(10),
+                    'c_skillIndex': Random.string(10),
+                    'c_weight': Random.int(1,10)
+                }
+            ],
+        'total': 10
+    },
+    'msg': 'ok'
+});
 
 export const scoreData = Mock.mock(hostUrl + 'score/list/page', 'post', {
     'code': '200',
@@ -46,8 +64,8 @@ export const academyData = Mock.mock(hostUrl + 'academy/list/page', 'post', {
         'records|1-10':
             [
                 {
-                    'a_name': Random.string(5),
                     'a_id': Random.integer(1000000000, 9999999999),
+                    'a_name': Random.string(5),
                     'a_info': Random.string(30),
                     'photoUrl': Random.image('200x200', '#9876AA', '#4E89BA', 'png', 'hello')
                 }

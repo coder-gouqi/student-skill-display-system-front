@@ -66,7 +66,12 @@ export default {
                 {
                     icon: 'el-icon-reading',
                     index: 'student',
-                    title: '学生管理'
+                    title: '学生信息管理'
+                },
+                {
+                    icon: 'el-icon-notebook-2',
+                    index: 'course',
+                    title: '课程信息管理'
                 },
                 {
                     icon: 'el-icon-document',
@@ -76,7 +81,7 @@ export default {
                 {
                     icon: 'el-icon-office-building',
                     index: 'academy',
-                    title: '学院管理'
+                    title: '学院信息管理'
                 },
                 {
                     icon: 'el-icon-s-flag',
@@ -87,6 +92,12 @@ export default {
                     icon: 'el-icon-s-data',
                     index: 'skillLevel',
                     title: '技能等级'
+
+                },
+                {
+                    icon: 'el-icon-s-platform',
+                    index: 'skill',
+                    title: '技能展示'
                 },
                 {
                     icon: 'el-icon-user',

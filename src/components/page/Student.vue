@@ -3,7 +3,7 @@
         <div class='crumbs'>
             <el-breadcrumb separator='/'>
                 <el-breadcrumb-item>
-                    <i class='el-icon-lx-cascades'></i> 学生管理
+                    <i class='el-icon-lx-cascades'></i> 学生信息管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
