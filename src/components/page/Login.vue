@@ -4,7 +4,7 @@
             <div class='ms-title'>学生技能展示系统</div>
             <el-form :model='form' :rules='rules' ref='login' label-width='0px' class='ms-content'>
                 <el-form-item prop='title'>
-                    <el-input v-model='form.title' placeholder='userAccount'>
+                    <el-input v-model='form.userAccount' placeholder='userAccount'>
                         <el-button slot='prepend' icon='el-icon-user'></el-button>
                     </el-input>
                 </el-form-item>
@@ -12,7 +12,7 @@
                     <el-input
                         type='password'
                         placeholder='userPassword'
-                        v-model='form.content'
+                        v-model='form.userPassword'
                         @keyup.enter.native='submitForm()'
                     >
                         <el-button slot='prepend' icon='el-icon-lock'></el-button>
@@ -28,17 +28,18 @@
 
 <script>
 
+import { userLogin } from '@/api/user';
+
 export default {
     data: function() {
         return {
             form: {
-                id: '',
-                title: '',
-                content: ''
+                userAccount: '',
+                userPassword: ''
             },
             rules: {
-                title: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-                content: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+                userAccount: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+                userPassword: [{ required: true, message: '请输入密码', trigger: 'blur' }]
             }
         };
     },
@@ -46,19 +47,19 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    // itemQuery(this.form).then((res) => {
-                    //     if (res.data != null) {
-                    //         this.$message.success('登录成功');
-                    //         localStorage.setItem('username', this.form.title);
-                    //         this.$router.push('/');
-                    //     } else {
-                    //         this.$message.error('登录失败，账号或密码错误');
-                    //         return false;
-                    //     }
-                    // });
-                    this.$message.success('登录成功');
-                    localStorage.setItem('username', this.form.title);
-                    this.$router.push('/');
+                    userLogin(this.form).then((res) => {
+                        if (res.data != null) {
+                            this.$message.success('登录成功');
+                            localStorage.setItem('username', res.data.userName);
+                            this.$router.push('/');
+                        } else {
+                            this.$message.error('登录失败，账号或密码错误');
+                            return false;
+                        }
+                    });
+                    // this.$message.success('登录成功');
+                    // localStorage.setItem('username', this.form.title);
+                    // this.$router.push('/');
                 } else {
                     this.$message.error('请输入账号和密码');
                     return false;

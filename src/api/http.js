@@ -5,13 +5,13 @@ const request = axios.create({
     // 线上地址
     // baseURL: 'http://xx.xx.xx.xx:8080/api/',
     // 本地开发地址
-    baseURL: 'http://localhost:8080/api/',
+    baseURL: 'http://localhost:8080/system/',
     //访问超时时间是5秒s
     timeout: 5000
 });
 
 //线上图片访问地址
-export const hostUrl = 'http://localhost:8080/api/';
+export const hostUrl = 'http://localhost:8080/system/';
 
 /**
  * 封装get方法

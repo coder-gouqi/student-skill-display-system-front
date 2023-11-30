@@ -3,13 +3,12 @@
         <div class='crumbs'>
             <el-breadcrumb separator='/'>
                 <el-breadcrumb-item>
-                    <i class='el-icon-lx-cascades'></i> 技能展示
+                    <i class='el-icon-lx-cascades'></i> 个人技能展示
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class='container'>
             <div class='handle-box'>
-
             </div>
             <el-table
                 :data='scoreList'
@@ -42,8 +41,6 @@
                 ></el-pagination>
             </div>
         </div>
-
-        <!-- 编辑弹出框 -->
         <el-dialog title='查看能力等级' :visible.sync='editVisible' width='50%'
                    @open='open()'
                    :modal-append-to-body='false'

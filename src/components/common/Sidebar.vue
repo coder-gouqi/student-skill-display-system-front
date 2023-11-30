@@ -86,18 +86,18 @@ export default {
                 {
                     icon: 'el-icon-s-flag',
                     index: 'skillIndex',
-                    title: '技能指标'
+                    title: '技能指标管理'
                 },
                 {
                     icon: 'el-icon-s-data',
                     index: 'skillLevel',
-                    title: '技能等级'
+                    title: '技能等级管理'
 
                 },
                 {
                     icon: 'el-icon-s-platform',
                     index: 'skill',
-                    title: '技能展示'
+                    title: '个人技能展示'
                 },
                 {
                     icon: 'el-icon-user',

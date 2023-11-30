@@ -35,13 +35,14 @@
 </template>
 <script>
 import bus from './bus';
+import { userLogout } from '@/api/user';
 
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
-            name: 'goat'
+            name: 'user'
         };
     },
     computed: {
@@ -54,8 +55,15 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'logout') {
-                localStorage.removeItem('username');
-                this.$router.push('/login');
+                userLogout().then((res) => {
+                    if (res.code == 1) {
+                        localStorage.removeItem('username');
+                        this.$message.success('注销成功');
+                        this.$router.push('/login');
+                    } else {
+                        this.$message.error('注销失败');
+                    }
+                });
             }
         },
         // 侧边栏折叠
