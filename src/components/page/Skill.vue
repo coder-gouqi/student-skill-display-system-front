@@ -11,15 +11,15 @@
             <div class='handle-box'>
             </div>
             <el-table
-                :data='scoreList'
+                :data='skillList'
                 border
                 class='table'
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='scoreId' label='学生id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='courseName' label='学生姓名' align='center'></el-table-column>
-                <el-table-column prop='studentName' label='学生成绩' align='center'></el-table-column>
+                <el-table-column prop='id' label='学生id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='studentName' label='学生姓名' align='center'></el-table-column>
+                <el-table-column prop='studentSkillScore' label='能力指标名称' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -54,7 +54,7 @@
 
 <script>
 
-import { scoreAdd, scoreDelete, scoreQuery, scoreUpdate } from '@/api/score';
+import { skillAdd, skillDelete, skillQuery, skillUpdate } from '@/api/skill';
 
 export default {
     name: 'skill',
@@ -67,13 +67,13 @@ export default {
                 sortOrder: 'ascend'
             },
             id: '',
-            scoreList: [],
+            skillList: [],
             editVisible: false,
             addVisible: false,
             form: {
-                scoreId: '',
+                id: '',
                 studentName: '',
-                courseName: '',
+                studentSkillScore: '',
                 isChange: false
             },
             idx: -1,
@@ -88,15 +88,15 @@ export default {
     },
     methods: {
         getData() {
-            scoreQuery(this.query).then(res => {
-                this.scoreList = res.data.records;
+            skillQuery(this.query).then(res => {
+                this.skillList = res.data.records;
                 this.total = res.data.total || 0;
             });
         },
         clearForm() {
-            this.form.scoreId = '';
+            this.form.id = '';
+            this.form.studentSkillScore = '';
             this.form.studentName = '';
-            this.form.courseName = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -105,10 +105,10 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    scoreDelete(row).then((res) => {
+                    skillDelete(row).then((res) => {
                         if (res.code == 1) {
                             this.$message.success('删除成功');
-                            this.scoreList.splice(index, 1);
+                            this.skillList.splice(index, 1);
                         } else {
                             this.$message.error('删除失败');
                         }
@@ -126,12 +126,12 @@ export default {
         saveAdd() {
             if (this.form.isChange) {
                 this.addVisible = false;
-                scoreAdd(this.form).then((res) => {
+                skillAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
                         this.getData();
                         this.clearForm();
-                        this.$set(this.scoreList, this.form);
+                        this.$set(this.skillList, this.form);
                     }
                 });
             } else {
@@ -146,9 +146,9 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.scoreId = row.scoreId;
+            this.form.id = row.id;
+            this.form.studentSkillScore = row.studentSkillScore;
             this.form.studentName = row.studentName;
-            this.form.courseName = row.courseName;
             this.form.isChange = false;
             this.$set(this.form);
         },
@@ -156,12 +156,12 @@ export default {
         saveEdit() {
             if (this.form.isChange) {
                 this.editVisible = false;
-                scoreUpdate(this.form).then((res) => {
+                skillUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新失败');
                         this.getData();
                         this.clearForm();
-                        this.$set(this.scoreList, this.form);
+                        this.$set(this.skillList, this.form);
                     } else {
                         this.$message.error('更新失败');
                     }
@@ -240,14 +240,6 @@ export default {
 .table {
     width: 100%;
     font-size: 14px;
-}
-
-.red {
-    color: #ff0000;
-}
-
-.mr10 {
-    margin-right: 10px;
 }
 
 </style>

@@ -23,10 +23,10 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='s_id' label='技能等级id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='s_level' label='技能等级' align='center'></el-table-column>
-                <el-table-column prop='s_left' label='开始值' align='center'></el-table-column>
-                <el-table-column prop='s_right' label='结束值' align='center'></el-table-column>
+                <el-table-column prop='id' label='技能等级id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='skillLevel' label='技能等级' align='center'></el-table-column>
+                <el-table-column prop='start' label='开始值' align='center'></el-table-column>
+                <el-table-column prop='end' label='结束值' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -61,13 +61,13 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='技能等级'>
-                    <el-input v-model='form.s_level' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.skillLevel' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='开始值'>
-                    <el-input v-model='form.s_left' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.start' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='结束值'>
-                    <el-input v-model='form.s_right' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.end' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -80,13 +80,13 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='技能等级'>
-                    <el-input v-model='form.s_level' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.skillLevel' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='开始值'>
-                    <el-input v-model='form.s_left' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.start' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='结束值'>
-                    <el-input v-model='form.s_right' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.end' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -116,10 +116,10 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                s_id: '',
-                s_level: '',
-                s_left: '',
-                s_right: '',
+                id: '',
+                skillLevel: '',
+                start: '',
+                end: '',
                 isChange: false
             },
             idx: -1,
@@ -137,10 +137,10 @@ export default {
             });
         },
         clearForm() {
-            this.form.s_id = '';
-            this.form.s_level = '';
-            this.form.s_left = '';
-            this.form.s_right = '';
+            this.form.id = '';
+            this.form.skillLevel = '';
+            this.form.start = '';
+            this.form.end = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -190,10 +190,10 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.s_id = row.s_id;
-            this.form.s_level = row.s_level;
-            this.form.s_left = row.s_left;
-            this.form.s_right = row.s_right;
+            this.form.id = row.id;
+            this.form.skillLevel = row.skillLevel;
+            this.form.start = row.start;
+            this.form.end = row.end;
             this.form.isChange = false;
             this.$set(this.form);
         },

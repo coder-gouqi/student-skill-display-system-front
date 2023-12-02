@@ -23,9 +23,9 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='a_id' label='学院id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='a_name' label='学院名称' align='center'></el-table-column>
-                <el-table-column prop='a_info' label='学院简介' align='center'></el-table-column>
+                <el-table-column prop='id' label='学院id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='academyName' label='学院名称' align='center'></el-table-column>
+                <el-table-column prop='academyInfo' label='学院简介' align='center'></el-table-column>
                 <el-table-column label='照片' align='center'>
                     <template slot-scope='scope'>
                         <el-image
@@ -69,10 +69,11 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='学院'>
-                    <el-input v-model='form.a_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.academyName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='简介'>
-                    <el-input v-model='form.a_info' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.academyInfo' @change='isChange' style='width: 360px'
+                              type='textarea' :rows='6'></el-input>
                 </el-form-item>
                 <el-form-item label='照片' prop='file'>
                     <el-upload
@@ -101,10 +102,11 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='学院名称'>
-                    <el-input v-model='form.a_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.academyName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='简介'>
-                    <el-input v-model='form.a_info' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.academyInfo' @change='isChange' style='width: 360px'
+                              type='textarea' :rows='6'></el-input>
                 </el-form-item>
                 <el-form-item label='photo' prop='file'>
                     <el-upload
@@ -152,9 +154,9 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                a_id: '',
-                a_name: '',
-                a_info: '',
+                id: '',
+                academyName: '',
+                academyInfo: '',
                 photoUrl: '',
                 isUpload: false,
                 isChange: false
@@ -180,9 +182,9 @@ export default {
             });
         },
         clearForm() {
-            this.form.a_id = '';
-            this.form.a_name = '';
-            this.form.a_info = '';
+            this.form.id = '';
+            this.form.academyName = '';
+            this.form.academyInfo = '';
             this.form.photoUrl = '';
             this.imageUrl = '';
             this.file = '';
@@ -239,9 +241,9 @@ export default {
             this.idx = index;
             // this.form.photoUrl = hostUrl + row.photoUrl;
             this.form.photoUrl = row.photoUrl;
-            this.form.a_id = row.a_id;
-            this.form.a_name = row.a_name;
-            this.form.a_info = row.a_info;
+            this.form.id = row.id;
+            this.form.academyName = row.academyName;
+            this.form.academyInfo = row.academyInfo;
             this.form.isUpload = false;
             this.form.isChange = false;
             this.$set(this.form);

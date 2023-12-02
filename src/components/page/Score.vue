@@ -23,9 +23,10 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='scoreId' label='学生成绩id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='id' label='学生成绩id' align='center' v-if='false'></el-table-column>
                 <el-table-column prop='courseName' label='课程名称' align='center'></el-table-column>
-                <el-table-column prop='studentName' label='学生成绩' align='center'></el-table-column>
+                <el-table-column prop='studentName' label='学生姓名' align='center'></el-table-column>
+                <el-table-column prop='studentScore' label='学生成绩' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -62,8 +63,11 @@
                 <el-form-item label='课程名称'>
                     <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
-                <el-form-item label='学生成绩'>
+                <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
+                <el-form-item label='学生成绩'>
+                    <el-input v-model='form.studentScore' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -78,8 +82,11 @@
                 <el-form-item label='课程名称'>
                     <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
-                <el-form-item label='学生成绩'>
+                <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
+                <el-form-item label='学生成绩'>
+                    <el-input v-model='form.studentScore' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -109,9 +116,10 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                scoreId: '',
+                id: '',
                 studentName: '',
                 courseName: '',
+                studentScore: '',
                 isChange: false
             },
             idx: -1,
@@ -129,9 +137,10 @@ export default {
             });
         },
         clearForm() {
-            this.form.scoreId = '';
+            this.form.id = '';
             this.form.studentName = '';
             this.form.courseName = '';
+            this.form.studentScore = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -181,9 +190,10 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.scoreId = row.scoreId;
+            this.form.id = row.id;
             this.form.studentName = row.studentName;
             this.form.courseName = row.courseName;
+            this.form.studentScore = row.studentScore;
             this.form.isChange = false;
             this.$set(this.form);
         },

@@ -23,10 +23,10 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='c_id' label='课程id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='c_name' label='课程名称' align='center'></el-table-column>
-                <el-table-column prop='c_skillIndex' label='所属技能指标' align='center'></el-table-column>
-                <el-table-column prop='c_weight' label='权重' align='center'></el-table-column>
+                <el-table-column prop='id' label='课程id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='courseName' label='课程名称' align='center'></el-table-column>
+                <el-table-column prop='courseSkillIndex' label='所属技能指标' align='center'></el-table-column>
+                <el-table-column prop='courseWeight' label='权重' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -61,13 +61,13 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='课程名称'>
-                    <el-input v-model='form.c_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='所属技能指标'>
-                    <el-input v-model='form.c_skillIndex' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseSkillIndex' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='权重'>
-                    <el-input v-model='form.c_weight' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseWeight' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -80,13 +80,13 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='课程名称'>
-                    <el-input v-model='form.c_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='所属技能指标'>
-                    <el-input v-model='form.c_skillIndex' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseSkillIndex' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='权重'>
-                    <el-input v-model='form.c_weight' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.courseWeight' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -116,10 +116,10 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                c_id: '',
-                c_name: '',
-                c_skillIndex: '',
-                c_weight: '',
+                id: '',
+                courseName: '',
+                courseSkillIndex: '',
+                courseWeight: '',
                 isChange: false
             },
             idx: -1,
@@ -137,10 +137,10 @@ export default {
             });
         },
         clearForm() {
-            this.form.c_id = '';
-            this.form.c_name = '';
-            this.form.c_skillIndex = '';
-            this.form.c_weight = '';
+            this.form.id = '';
+            this.form.courseName = '';
+            this.form.courseSkillIndex = '';
+            this.form.courseWeight = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -190,10 +190,10 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.c_id = row.c_id;
-            this.form.c_name = row.c_name;
-            this.form.c_skillIndex = row.c_skillIndex;
-            this.form.c_weight = row.c_weight;
+            this.form.id = row.id;
+            this.form.courseName = row.courseName;
+            this.form.courseSkillIndex = row.courseSkillIndex;
+            this.form.courseWeight = row.courseWeight;
             this.form.isChange = false;
             this.$set(this.form);
         },

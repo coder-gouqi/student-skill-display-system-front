@@ -23,9 +23,8 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='s_id' label='技能指标id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='s_name' label='技能指标名称' align='center'></el-table-column>
-                <el-table-column prop='s_weight' label='权重' align='center'></el-table-column>
+                <el-table-column prop='id' label='技能指标id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='skillIndexName' label='技能指标名称' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -60,10 +59,7 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='技能指标'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
-                </el-form-item>
-                <el-form-item label='权重'>
-                    <el-input v-model='form.s_weight' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.skillIndexName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -76,10 +72,7 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='技能指标名称'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
-                </el-form-item>
-                <el-form-item label='权重'>
-                    <el-input v-model='form.s_weight' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.skillIndexName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
             </el-form>
             <span slot='footer' class='dialog-footer'>
@@ -109,9 +102,8 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                s_id: '',
-                s_name: '',
-                s_weight: '',
+                id: '',
+                skillIndexName: '',
                 isChange: false
             },
             idx: -1,
@@ -129,9 +121,8 @@ export default {
             });
         },
         clearForm() {
-            this.form.s_id = '';
-            this.form.s_name = '';
-            this.form.s_weight = '';
+            this.form.id = '';
+            this.form.skillIndexName = '';
         },
         // 删除操作
         handleDelete(index, row) {
@@ -181,9 +172,8 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            this.form.s_id = row.s_id;
-            this.form.s_name = row.s_name;
-            this.form.s_weight = row.s_weight;
+            this.form.id = row.id;
+            this.form.skillIndexName = row.skillIndexName;
             this.form.isChange = false;
             this.$set(this.form);
         },

@@ -4,14 +4,14 @@
             <div class='ms-title'>学生技能展示系统</div>
             <el-form :model='form' :rules='rules' ref='login' label-width='0px' class='ms-content'>
                 <el-form-item prop='title'>
-                    <el-input v-model='form.userAccount' placeholder='userAccount'>
+                    <el-input v-model='form.userAccount' placeholder='请输入账号'>
                         <el-button slot='prepend' icon='el-icon-user'></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop='content'>
                     <el-input
                         type='password'
-                        placeholder='userPassword'
+                        placeholder='请输入密码'
                         v-model='form.userPassword'
                         @keyup.enter.native='submitForm()'
                     >
@@ -84,7 +84,7 @@ export default {
     line-height: 50px;
     text-align: center;
     font-size: 20px;
-    color: #fff;
+    color: black;
     border-bottom: 1px solid #ddd;
 }
 
@@ -95,7 +95,7 @@ export default {
     width: 350px;
     margin: -190px 0 0 -175px;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);
     overflow: hidden;
 }
 

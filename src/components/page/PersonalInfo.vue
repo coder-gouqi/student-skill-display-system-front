@@ -9,23 +9,23 @@
         </div>
         <div class='container'>
             <el-form :model='form' :rules='rules' ref='form' label-width='100px'>
-                <el-form-item label='学号' prop='s_number'>
-                    <el-input v-model='form.s_number'></el-input>
+                <el-form-item label='学号' prop='studentNumber'>
+                    <el-input v-model='form.studentNumber' style='width: 223px'></el-input>
                 </el-form-item>
-                <el-form-item label='学院' prop='s_academy'>
-                    <el-select v-model='form.s_academy' placeholder='请选择学院'>
+                <el-form-item label='学院' prop='studentAcademy'>
+                    <el-select v-model='form.studentAcademy' placeholder='请选择学院'>
                         <el-option label='网络空间安全学院' value='网络空间安全学院'></el-option>
                         <el-option label='电子信息工程学院' value='电子信息工程学院'></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label='班级' prop='s_class'>
-                    <el-input v-model='form.s_class'></el-input>
+                <el-form-item label='班级' prop='studentClass'>
+                    <el-input v-model='form.studentClass' style='width: 223px'></el-input>
                 </el-form-item>
-                <el-form-item label='姓名' prop='s_name'>
-                    <el-input v-model='form.s_name'></el-input>
+                <el-form-item label='姓名' prop='studentName'>
+                    <el-input v-model='form.studentName' style='width: 223px'></el-input>
                 </el-form-item>
-                <el-form-item label='年级' prop='s_grade'>
-                    <el-select v-model='form.s_grade' placeholder='请选择年级'>
+                <el-form-item label='年级' prop='studentGrade'>
+                    <el-select v-model='form.studentGrade' placeholder='请选择年级'>
                         <el-option label='2020级' value='2020级'></el-option>
                         <el-option label='2021级' value='2021级'></el-option>
                         <el-option label='2022级' value='2022级'></el-option>
@@ -45,33 +45,33 @@ export default {
     data() {
         return {
             form: {
-                s_id: '',
-                s_number: '',
-                s_academy: '',
-                s_class: '',
-                s_name: '',
-                s_grade: '',
+                id: '',
+                studentNumber: '',
+                studentAcademy: '',
+                studentClass: '',
+                studentName: '',
+                studentGrade: '',
                 photoUrl: '',
                 isUpload: false,
                 isChange: false
             },
             rules: {
-                s_number: [
+                studentNumber: [
                     { required: true, message: '请输入学号', trigger: 'blur' },
                     { min: 9, max: 10, message: '长度在 9 到 10 个字符', trigger: 'blur' }
                 ],
-                s_academy: [
+                studentAcademy: [
                     { required: true, message: '请选择学院', trigger: 'change' }
                 ],
-                s_class: [
+                studentClass: [
                     { required: true, message: '请输入班级', trigger: 'blur' },
                     { min: 5, max: 10, message: '长度在 5 到 10 个字符', trigger: 'blur' }
                 ],
-                s_name: [
+                studentName: [
                     { required: true, message: '请输入姓名', trigger: 'blur' },
                     { min: 2, max: 15, message: '长度在 2 到 10 个字符', trigger: 'blur' }
                 ],
-                s_grade: [
+                studentGrade: [
                     { required: true, message: '请选择年级', trigger: 'change' }
                 ]
             }

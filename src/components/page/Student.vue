@@ -23,12 +23,12 @@
                 ref='multipleTable'
                 header-cell-class-name='table-header'
             >
-                <el-table-column prop='s_id' label='学生id' align='center' v-if='false'></el-table-column>
-                <el-table-column prop='s_number' label='学号' align='center'></el-table-column>
-                <el-table-column prop='s_academy' label='学院' align='center'></el-table-column>
-                <el-table-column prop='s_class' label='班级' align='center'></el-table-column>
-                <el-table-column prop='s_name' label='姓名' align='center'></el-table-column>
-                <el-table-column prop='s_grade' label='年级' align='center'></el-table-column>
+                <el-table-column prop='id' label='学生id' align='center' v-if='false'></el-table-column>
+                <el-table-column prop='studentNumber' label='学号' align='center'></el-table-column>
+                <el-table-column prop='studentAcademy' label='学院' align='center'></el-table-column>
+                <el-table-column prop='studentClass' label='班级' align='center'></el-table-column>
+                <el-table-column prop='studentName' label='姓名' align='center'></el-table-column>
+                <el-table-column prop='studentGrade' label='年级' align='center'></el-table-column>
                 <el-table-column label='照片' align='center'>
                     <template slot-scope='scope'>
                         <el-image
@@ -72,19 +72,19 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='学号'>
-                    <el-input v-model='form.s_number' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='学院'>
-                    <el-input v-model='form.s_academy' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentAcademy' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='班级'>
-                    <el-input v-model='form.s_class' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='姓名'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='年级'>
-                    <el-input v-model='form.s_grade' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentGrade' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='照片' prop='file'>
                     <el-upload
@@ -113,19 +113,19 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='学号'>
-                    <el-input v-model='form.s_number' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='学院'>
-                    <el-input v-model='form.s_academy' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentAcademy' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='班级'>
-                    <el-input v-model='form.s_class' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='姓名'>
-                    <el-input v-model='form.s_name' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='年级'>
-                    <el-input v-model='form.s_grade' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.studentGrade' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='photo' prop='file'>
                     <el-upload
@@ -174,12 +174,12 @@ export default {
             editVisible: false,
             addVisible: false,
             form: {
-                s_id: '',
-                s_number: '',
-                s_academy: '',
-                s_class: '',
-                s_name: '',
-                s_grade: '',
+                id: '',
+                studentNumber: '',
+                studentAcademy: '',
+                studentClass: '',
+                studentName: '',
+                studentGrade: '',
                 photoUrl: '',
                 isUpload: false,
                 isChange: false
@@ -205,13 +205,13 @@ export default {
             });
         },
         clearForm() {
-            this.form.s_id = '';
-            this.form.s_number = '';
-            this.form.s_academy = '';
-            this.form.s_class = '';
-            this.form.s_name = '';
-            this.form.s_grade = '';
-            this.form.s_name = '';
+            this.form.id = '';
+            this.form.studentNumber = '';
+            this.form.studentAcademy = '';
+            this.form.studentClass = '';
+            this.form.studentName = '';
+            this.form.studentGrade = '';
+            this.form.studentName = '';
             this.form.photoUrl = '';
             this.imageUrl = '';
             this.file = '';
@@ -268,12 +268,12 @@ export default {
             this.idx = index;
             // this.form.photoUrl = hostUrl + row.photoUrl;
             this.form.photoUrl = row.photoUrl;
-            this.form.s_id = row.s_id;
-            this.form.s_number = row.s_number;
-            this.form.s_academy = row.s_academy;
-            this.form.s_class = row.s_class;
-            this.form.s_name = row.s_name;
-            this.form.s_grade = row.s_grade;
+            this.form.id = row.id;
+            this.form.studentNumber = row.studentNumber;
+            this.form.studentAcademy = row.studentAcademy;
+            this.form.studentClass = row.studentClass;
+            this.form.studentName = row.studentName;
+            this.form.studentGrade = row.studentGrade;
             this.form.isUpload = false;
             this.form.isChange = false;
             this.$set(this.form);

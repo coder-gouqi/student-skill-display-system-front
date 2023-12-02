@@ -10,12 +10,12 @@ export const StudentData = Mock.mock(hostUrl + 'student/list/page', 'post', {
         'records|1-10':
             [
                 {
-                    's_id': Random.integer(1000000000, 9999999999),
-                    's_name': Random.string(5),
-                    's_number': Random.integer(2021121000, 2021121999),
-                    's_academy': Random.string(10),
-                    's_class': Random.string(10),
-                    's_grade': Random.string(10),
+                    'id': Random.integer(1000000000, 9999999999),
+                    'studentName': Random.string(5),
+                    'studentNumber': Random.integer(2021121000, 2021121999),
+                    'studentAcademy': Random.string(10),
+                    'studentClass': Random.string(10),
+                    'studentGrade': Random.string(10),
                     'photoUrl': Random.image('200x200', '#9876AA', '#4E89BA', 'png', 'hello')
                 }
             ],
@@ -31,10 +31,10 @@ export const courseData = Mock.mock(hostUrl + 'course/list/page', 'post', {
         'records|1-10':
             [
                 {
-                    'c_id': Random.integer(1000000000, 9999999999),
-                    'c_name': Random.string(10),
-                    'c_skillIndex': Random.string(10),
-                    'c_weight': Random.int(1,10)
+                    'id': Random.integer(1000000000, 9999999999),
+                    'courseName': Random.string(10),
+                    'courseSkillIndex': Random.string(10),
+                    'courseWeight': Random.int(1,10)
                 }
             ],
         'total': 10
@@ -48,9 +48,10 @@ export const scoreData = Mock.mock(hostUrl + 'score/list/page', 'post', {
         'records|1-10':
             [
                 {
-                    'scoreId': Random.integer(1000000000, 9999999999),
+                    'id': Random.integer(1000000000, 9999999999),
                     'studentName': Random.string(10),
-                    'courseName': Random.string(10)
+                    'courseName': Random.string(10),
+                    'studentScore': Random.int(10,100)
                 }
             ],
         'total': 10
@@ -64,10 +65,26 @@ export const academyData = Mock.mock(hostUrl + 'academy/list/page', 'post', {
         'records|1-10':
             [
                 {
-                    'a_id': Random.integer(1000000000, 9999999999),
-                    'a_name': Random.string(5),
-                    'a_info': Random.string(30),
+                    'id': Random.integer(1000000000, 9999999999),
+                    'academyName': Random.string(5),
+                    'academyInfo': Random.string(30),
                     'photoUrl': Random.image('200x200', '#9876AA', '#4E89BA', 'png', 'hello')
+                }
+            ],
+        'total': 10
+    },
+    'msg': 'ok'
+});
+
+export const skillData = Mock.mock(hostUrl + 'skill/list/page', 'post', {
+    'code': '200',
+    'data': {
+        'records|1-10':
+            [
+                {
+                    'id': Random.integer(1000000000, 9999999999),
+                    'studentName': Random.string(10),
+                    'studentSkillScore': Random.string(10),
                 }
             ],
         'total': 10
@@ -81,10 +98,10 @@ export const skillLevelData = Mock.mock(hostUrl + 'skillLevel/list/page', 'post'
         'records|1-10':
             [
                 {
-                    's_id': Random.integer(1000000000, 9999999999),
-                    's_level': Random.string(10),
-                    's_left': Random.int(0, 5),
-                    's_right': Random.int(5, 10)
+                    'id': Random.integer(1000000000, 9999999999),
+                    'skillLevel': Random.string(10),
+                    'start': Random.int(0, 5),
+                    'end': Random.int(5, 10)
                 }
             ],
         'total': 10
@@ -98,9 +115,8 @@ export const skillIndexData = Mock.mock(hostUrl + 'skillIndex/list/page', 'post'
         'records|1-10':
             [
                 {
-                    's_id': Random.integer(1000000000, 9999999999),
-                    's_name': Random.string(10),
-                    's_weight': Random.int(1, 5)
+                    'id': Random.integer(1000000000, 9999999999),
+                    'skillIndexName': Random.string(10),
                 }
             ],
         'total': 10
