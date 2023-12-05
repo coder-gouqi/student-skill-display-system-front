@@ -58,23 +58,23 @@ export const scoreData = Mock.mock(hostUrl + 'score/list/page', 'post', {
     },
     'msg': 'ok'
 });
-
-export const academyData = Mock.mock(hostUrl + 'academy/list/page', 'post', {
-    'code': '200',
-    'data': {
-        'records|1-10':
-            [
-                {
-                    'id': Random.integer(1000000000, 9999999999),
-                    'academyName': Random.string(5),
-                    'academyInfo': Random.string(30),
-                    'photoUrl': Random.image('200x200', '#9876AA', '#4E89BA', 'png', 'hello')
-                }
-            ],
-        'total': 10
-    },
-    'msg': 'ok'
-});
+//
+// export const academyData = Mock.mock(hostUrl + 'academy/list/page', 'post', {
+//     'code': '200',
+//     'data': {
+//         'records|1-10':
+//             [
+//                 {
+//                     'id': Random.integer(1000000000, 9999999999),
+//                     'academyName': Random.string(5),
+//                     'academyInfo': Random.string(30),
+//                     'photoUrl': Random.image('200x200', '#9876AA', '#4E89BA', 'png', 'hello')
+//                 }
+//             ],
+//         'total': 10
+//     },
+//     'msg': 'ok'
+// });
 
 export const skillData = Mock.mock(hostUrl + 'skill/list/page', 'post', {
     'code': '200',

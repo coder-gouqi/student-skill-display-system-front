@@ -15,6 +15,9 @@
                     @click='handleAdd'
                 >添加学院
                 </el-button>
+                <el-input v-model='query.academyName' placeholder='学院名称' class='handle-input mr10'></el-input>
+                <el-input v-model='query.academyInfo' placeholder='学院简介' class='handle-input mr10'></el-input>
+                <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
             </div>
             <el-table
                 :data='academyList'
@@ -86,7 +89,7 @@
                         :on-change='uploadFile'
                         :before-upload='beforeAvatarUpload'
                         :on-remove='handleRemove'>
-                        <img v-if='form.photoUrl' :src='form.photoUrl' class='avatar' style='width: 100%'>
+                        <img v-if='form.academyPhoto' :src='form.academyPhoto' class='avatar' style='width: 100%'>
                         <i v-else class='el-icon-plus avatar-uploader-icon'></i>
                     </el-upload>
                     <el-button type='primary' @click='uploadConfirm'>上传</el-button>
@@ -119,7 +122,7 @@
                         :on-change='uploadFile'
                         :before-upload='beforeAvatarUpload'
                         :on-remove='handleRemove'>
-                        <img v-if='form.photoUrl' :src='form.photoUrl' class='avatar' style='width: 100%'>
+                        <img v-if='form.academyPhoto' :src='form.academyPhoto' class='avatar' style='width: 100%'>
                         <i v-else class='el-icon-plus avatar-uploader-icon'></i>
                     </el-upload>
                     <el-button type='primary' @click='uploadConfirm'>上传</el-button>
@@ -145,6 +148,8 @@ export default {
             query: {
                 current: 1,
                 pageSize: 10,
+                academyName: '',
+                academyInfo: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
@@ -157,7 +162,7 @@ export default {
                 id: '',
                 academyName: '',
                 academyInfo: '',
-                photoUrl: '',
+                academyPhoto: '',
                 isUpload: false,
                 isChange: false
             },
@@ -172,8 +177,8 @@ export default {
     },
     methods: {
         getBaseURLToList(scope) {
-            // return hostUrl + scope.row.photoUrl;
-            return scope.row.photoUrl;
+            // return hostUrl + scope.row.academyPhoto;
+            return scope.row.academyPhoto;
         },
         getData() {
             academyQuery(this.query).then(res => {
@@ -181,11 +186,24 @@ export default {
                 this.total = res.data.total || 0;
             });
         },
+        // 触发搜索按钮
+        handleSearch() {
+            try {
+                if (this.query.academyName === '' && this.query.academyInfo === '') {
+                    this.$message.error('搜索内容为空');
+                    return;
+                }
+                this.getData();
+            } catch (e) {
+                this.$message.error('搜索失败');
+            }
+            this.$message.success('搜索成功');
+        },
         clearForm() {
             this.form.id = '';
             this.form.academyName = '';
             this.form.academyInfo = '';
-            this.form.photoUrl = '';
+            this.form.academyPhoto = '';
             this.imageUrl = '';
             this.file = '';
             this.form.isUpload = false;
@@ -218,7 +236,7 @@ export default {
         saveAdd() {
             if (this.form.isUpload || this.form.isChange) {
                 this.addVisible = false;
-                this.form.photoUrl = this.TempPhotoUrl;
+                this.form.academyPhoto = this.TempPhotoUrl;
                 academyAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
@@ -239,8 +257,8 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            // this.form.photoUrl = hostUrl + row.photoUrl;
-            this.form.photoUrl = row.photoUrl;
+            // this.form.academyPhoto = hostUrl + row.academyPhoto;
+            this.form.academyPhoto = row.academyPhoto;
             this.form.id = row.id;
             this.form.academyName = row.academyName;
             this.form.academyInfo = row.academyInfo;
@@ -253,15 +271,15 @@ export default {
             if (this.form.isUpload || this.form.isChange) {
                 this.editVisible = false;
                 if (this.form.isUpload) {
-                    this.form.photoUrl = this.TempPhotoUrl;
+                    this.form.academyPhoto = this.TempPhotoUrl;
                 } else {
-                    const str = this.form.photoUrl;
+                    const str = this.form.academyPhoto;
                     const reg = new RegExp(hostUrl, '');
-                    this.form.photoUrl = str.replace(reg, '');
+                    this.form.academyPhoto = str.replace(reg, '');
                 }
                 academyUpdate(this.form).then((res) => {
                     if (res.code == 1) {
-                        this.$message.success('更新失败');
+                        this.$message.success('更新成功');
                         this.getData();
                         this.clearForm();
                         this.$set(this.academyList, this.form);
@@ -285,7 +303,7 @@ export default {
         uploadFile(item) {
             this.file = item.raw; // 图片文件
             this.imageUrl = URL.createObjectURL(item.raw); // 图片上传浏览器回显地址
-            this.form.photoUrl = this.imageUrl;
+            this.form.academyPhoto = this.imageUrl;
             this.$set(this.form);
         },
         async uploadConfirm() {
@@ -367,4 +385,14 @@ export default {
     height: 178px;
     display: block;
 }
+
+.handle-select {
+    width: 120px;
+}
+
+.handle-input {
+    width: 300px;
+    display: inline-block;
+}
+
 </style>
