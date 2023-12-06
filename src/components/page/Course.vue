@@ -15,6 +15,18 @@
                     @click='handleAdd'
                 >添加课程信息
                 </el-button>
+                <el-input v-model='query.courseName' placeholder='课程名称' class='handle-input mr10'></el-input>
+                <el-select value-key='id' v-model='query.skillIndexName' placeholder='技能指标'
+                           class='handle-select mr10'
+                           @change='selectChange'>
+                    <el-option
+                        v-for='item in skillIndexList'
+                        :key='item.id'
+                        :label='item.skillIndexName'
+                        :value='item'>
+                    </el-option>
+                </el-select>
+                <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
             </div>
             <el-table
                 :data='courseList'
@@ -100,6 +112,7 @@
 <script>
 
 import { courseAdd, courseDelete, courseQuery, courseUpdate } from '@/api/course';
+import { skillQuery } from '@/api/skill';
 
 export default {
     name: 'course',
@@ -108,11 +121,13 @@ export default {
             query: {
                 current: 1,
                 pageSize: 10,
+                courseName: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
             id: '',
             courseList: [],
+            skillIndexList: [],
             editVisible: false,
             addVisible: false,
             form: {
@@ -135,6 +150,32 @@ export default {
                 this.courseList = res.data.records;
                 this.total = res.data.total || 0;
             });
+            let params = {
+                current: 1,
+                pageSize: 10,
+                sortField: '',
+                sortOrder: 'ascend'
+            };
+            skillQuery(params).then(res => {
+                this.skillIndexList = res.data().records;
+            });
+        },
+        // 触发搜索按钮
+        handleSearch() {
+            try {
+                if (this.query.academyName === '' && this.query.academyInfo === '') {
+                    this.$message.error('搜索内容为空');
+                    return;
+                }
+                this.getData();
+            } catch (e) {
+                this.$message.error('搜索失败');
+            }
+            this.$message.success('搜索成功');
+        },
+        selectChange(val) {
+            this.query.courseSkillIndexId = val.id;
+            this.query.skillIndexName = val.skillIndexName;
         },
         clearForm() {
             this.form.id = '';
@@ -247,4 +288,12 @@ export default {
     margin-right: 10px;
 }
 
+.handle-select {
+    width: 120px;
+}
+
+.handle-input {
+    width: 300px;
+    display: inline-block;
+}
 </style>
