@@ -122,6 +122,7 @@ export default {
                 current: 1,
                 pageSize: 10,
                 courseName: '',
+                skillIndexName: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
@@ -163,7 +164,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             try {
-                if (this.query.academyName === '' && this.query.academyInfo === '') {
+                if (this.query.courseName === '' && this.query.skillIndexName === '') {
                     this.$message.error('搜索内容为空');
                     return;
                 }

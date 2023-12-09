@@ -40,6 +40,8 @@
     </div>
 </template>
 <script>
+import { userGetLogin } from '@/api/user';
+
 export default {
     name: 'personalInfo',
     data() {
@@ -51,7 +53,7 @@ export default {
                 studentClass: '',
                 studentName: '',
                 studentGrade: '',
-                photoUrl: '',
+                studentPhoto: '',
                 isUpload: false,
                 isChange: false
             },
@@ -77,13 +79,21 @@ export default {
             }
         };
     },
+    created() {
+        this.getData();
+    },
     methods: {
+        getData() {
+            userGetLogin().then(res => {
+                this.form = res.data;
+            });
+        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     alert('submit!');
                 } else {
-                    console.log('error submit!!');
+                    alert('error submit!!');
                     return false;
                 }
             });

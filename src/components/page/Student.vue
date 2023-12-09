@@ -15,6 +15,10 @@
                     @click='handleAdd'
                 >添加学生
                 </el-button>
+                <el-input v-model='query.userName' placeholder='学生姓名' class='handle-input mr10'></el-input>
+                <el-input v-model='query.studentAcademy' placeholder='学院名称' class='handle-input mr10'></el-input>
+                <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+
             </div>
             <el-table
                 :data='studentList'
@@ -164,13 +168,15 @@ export default {
             query: {
                 current: 1,
                 pageSize: 10,
+                userName: '',
+                studentAcademyId:'',
+                studentAcademy:'',
                 sortField: '',
                 sortOrder: 'ascend'
             },
             id: '',
             TempPhotoUrl: '',
             studentList: [],
-            topicList: [],
             editVisible: false,
             addVisible: false,
             form: {
@@ -203,6 +209,19 @@ export default {
                 this.studentList = res.data.records;
                 this.total = res.data.total || 0;
             });
+        },
+        // 触发搜索按钮
+        handleSearch() {
+            try {
+                if (this.query.studentAcademy === '' && this.query.userName === '') {
+                    this.$message.error('搜索内容为空');
+                    return;
+                }
+                this.getData();
+            } catch (e) {
+                this.$message.error('搜索失败');
+            }
+            this.$message.success('搜索成功');
         },
         clearForm() {
             this.form.id = '';
@@ -396,5 +415,10 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+}
+
+.handle-input {
+    width: 300px;
+    display: inline-block;
 }
 </style>
