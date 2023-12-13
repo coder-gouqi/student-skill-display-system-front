@@ -11,14 +11,23 @@
             <div class='handle-box'>
                 <el-button
                     type='primary'
-                    class='handle-del mr10'
+                    class='mr10'
                     @click='handleAdd'
                 >添加学生
                 </el-button>
                 <el-input v-model='query.userName' placeholder='学生姓名' class='handle-input mr10'></el-input>
                 <el-input v-model='query.studentAcademy' placeholder='学院名称' class='handle-input mr10'></el-input>
-                <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
-
+                <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+                <el-upload
+                    action=' http://localhost:8080/system/excel/import?type=student'
+                    class='import'
+                    :on-success='importSuccess'
+                    :on-error='importFail'
+                    multiple
+                    :limit='1'
+                    :show-file-list='false'>
+                    <el-button class='mr10' type='primary'>导入学生信息</el-button>
+                </el-upload>
             </div>
             <el-table
                 :data='studentList'
@@ -169,8 +178,8 @@ export default {
                 current: 1,
                 pageSize: 10,
                 userName: '',
-                studentAcademyId:'',
-                studentAcademy:'',
+                studentAcademyId: '',
+                studentAcademy: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
@@ -348,6 +357,12 @@ export default {
                 this.$message.error('上传失败');
             });
         },
+        importSuccess(){
+            this.$message.success('导入成功');
+        },
+        importFail(){
+            this.$message.error('导入失败');
+        },
         handleRemove() {
             this.file = '';
         },
@@ -365,6 +380,17 @@ export default {
 
 <style scoped>
 
+
+.handle-box /deep/ .el-upload {
+    display: inline;
+    text-align: center;
+    cursor: pointer;
+    outline: 0;
+}
+
+.handle-box /deep/ .import {
+    display: inline;
+}
 
 .handle-box {
     margin-bottom: 20px;
