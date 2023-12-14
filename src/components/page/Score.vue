@@ -15,6 +15,19 @@
                     @click='handleAdd'
                 >添加学生成绩
                 </el-button>
+                <el-input v-model='query.studentName' placeholder='学生姓名' class='handle-input mr10'></el-input>
+                <el-input v-model='query.courseName' placeholder='课程名称' class='handle-input mr10'></el-input>
+                <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+                <el-upload
+                    action=' http://localhost:8080/system/excel/import?type=score'
+                    class='import'
+                    :on-success='importSuccess'
+                    :on-error='importFail'
+                    multiple
+                    :limit='1'
+                    :show-file-list='false'>
+                    <el-button class='mr10' type='primary'>导入成绩信息</el-button>
+                </el-upload>
             </div>
             <el-table
                 :data='scoreList'
@@ -102,17 +115,21 @@
 import { scoreAdd, scoreDelete, scoreQuery, scoreUpdate } from '@/api/score';
 
 export default {
-    name: 'skillIndex',
+    name: 'score',
     data() {
         return {
             query: {
                 current: 1,
                 pageSize: 10,
+                studentName: '',
+                courseName: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
             id: '',
             scoreList: [],
+            courseList: [],
+            studentList: [],
             editVisible: false,
             addVisible: false,
             form: {
@@ -135,6 +152,19 @@ export default {
                 this.scoreList = res.data.records;
                 this.total = res.data.total || 0;
             });
+        },
+        // 触发搜索按钮
+        handleSearch() {
+            try {
+                if (this.query.courseName === '' && this.query.studentName === '') {
+                    this.$message.error('搜索内容为空');
+                    return;
+                }
+                this.getData();
+            } catch (e) {
+                this.$message.error('搜索失败');
+            }
+            this.$message.success('搜索成功');
         },
         clearForm() {
             this.form.id = '';
@@ -222,6 +252,12 @@ export default {
         handlePageChange(val) {
             this.query.current = val;
             this.getData();
+        },
+        importSuccess() {
+            this.$message.success('导入成功');
+        },
+        importFail() {
+            this.$message.error('导入失败');
         }
     }
 };
@@ -229,6 +265,17 @@ export default {
 </script>
 
 <style scoped>
+
+.handle-box /deep/ .el-upload {
+    display: inline;
+    text-align: center;
+    cursor: pointer;
+    outline: 0;
+}
+
+.handle-box /deep/ .import {
+    display: inline;
+}
 
 .handle-box {
     margin-bottom: 20px;
@@ -245,6 +292,11 @@ export default {
 
 .mr10 {
     margin-right: 10px;
+}
+
+.handle-input {
+    width: 300px;
+    display: inline-block;
 }
 
 </style>

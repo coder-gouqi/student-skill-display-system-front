@@ -26,7 +26,17 @@
                         :value='item'>
                     </el-option>
                 </el-select>
-                <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+                <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+                <el-upload
+                    action=' http://localhost:8080/system/excel/import?type=course'
+                    class='import'
+                    :on-success='importSuccess'
+                    :on-error='importFail'
+                    multiple
+                    :limit='1'
+                    :show-file-list='false'>
+                    <el-button class='mr10' type='primary'>导入课程信息</el-button>
+                </el-upload>
             </div>
             <el-table
                 :data='courseList'
@@ -264,6 +274,12 @@ export default {
         handlePageChange(val) {
             this.query.current = val;
             this.getData();
+        },
+        importSuccess() {
+            this.$message.success('导入成功');
+        },
+        importFail() {
+            this.$message.error('导入失败');
         }
     }
 };
@@ -271,6 +287,17 @@ export default {
 </script>
 
 <style scoped>
+
+.handle-box /deep/ .el-upload {
+    display: inline;
+    text-align: center;
+    cursor: pointer;
+    outline: 0;
+}
+
+.handle-box /deep/ .import {
+    display: inline;
+}
 
 .handle-box {
     margin-bottom: 20px;

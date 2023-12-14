@@ -380,7 +380,6 @@ export default {
 
 <style scoped>
 
-
 .handle-box /deep/ .el-upload {
     display: inline;
     text-align: center;
