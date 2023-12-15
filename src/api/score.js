@@ -8,4 +8,6 @@ export const scoreDelete = (params) => post('/score/delete', params);
 
 export const scoreQuery = (params) => post('/score/list/page', params);
 
+export const scoreSelectAll = (params) => post('/score/select', params);
+
 export const scoreUpload = (params) => post('/file/upload', params);

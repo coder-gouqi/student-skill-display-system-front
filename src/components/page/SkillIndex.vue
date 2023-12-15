@@ -183,7 +183,7 @@ export default {
                 this.editVisible = false;
                 skillIndexUpdate(this.form).then((res) => {
                     if (res.code == 1) {
-                        this.$message.success('更新失败');
+                        this.$message.success('更新成功');
                         this.getData();
                         this.clearForm();
                         this.$set(this.skillIndexList, this.form);

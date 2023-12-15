@@ -16,7 +16,16 @@
                 >添加学生
                 </el-button>
                 <el-input v-model='query.userName' placeholder='学生姓名' class='handle-input mr10'></el-input>
-                <el-input v-model='query.studentAcademy' placeholder='学院名称' class='handle-input mr10'></el-input>
+                <el-select value-key='id' v-model='query.academyName' placeholder='学院名称'
+                           class='handle-select mr10'
+                           @change='selectChange'>
+                    <el-option
+                        v-for='item in academyList'
+                        :key='item.id'
+                        :label='item.academyName'
+                        :value='item'>
+                    </el-option>
+                </el-select>
                 <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
                 <el-upload
                     action=' http://localhost:8080/system/excel/import?type=student'
@@ -40,7 +49,7 @@
                 <el-table-column prop='studentNumber' label='学号' align='center'></el-table-column>
                 <el-table-column prop='studentAcademy' label='学院' align='center'></el-table-column>
                 <el-table-column prop='studentClass' label='班级' align='center'></el-table-column>
-                <el-table-column prop='studentName' label='姓名' align='center'></el-table-column>
+                <el-table-column prop='userName' label='姓名' align='center'></el-table-column>
                 <el-table-column prop='studentGrade' label='年级' align='center'></el-table-column>
                 <el-table-column label='照片' align='center'>
                     <template slot-scope='scope'>
@@ -94,7 +103,7 @@
                     <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='姓名'>
-                    <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.userName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='年级'>
                     <el-input v-model='form.studentGrade' @change='isChange' style='width: 360px'></el-input>
@@ -135,7 +144,7 @@
                     <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='姓名'>
-                    <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
+                    <el-input v-model='form.userName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='年级'>
                     <el-input v-model='form.studentGrade' @change='isChange' style='width: 360px'></el-input>
@@ -169,6 +178,7 @@
 
 import { studentAdd, studentDelete, studentQuery, studentUpdate, studentUpload } from '../../api/student';
 import { hostUrl } from '@/api/http';
+import { academySelectAll } from '@/api/academy';
 
 export default {
     name: 'student',
@@ -186,6 +196,7 @@ export default {
             id: '',
             TempPhotoUrl: '',
             studentList: [],
+            academyList: [],
             editVisible: false,
             addVisible: false,
             form: {
@@ -193,7 +204,7 @@ export default {
                 studentNumber: '',
                 studentAcademy: '',
                 studentClass: '',
-                studentName: '',
+                userName: '',
                 studentGrade: '',
                 photoUrl: '',
                 isUpload: false,
@@ -218,14 +229,16 @@ export default {
                 this.studentList = res.data.records;
                 this.total = res.data.total || 0;
             });
+            academySelectAll().then(res => {
+                this.academyList = res.data;
+            });
+        },
+        selectChange(val) {
+            this.query.studentAcademyId = val.id;
         },
         // 触发搜索按钮
         handleSearch() {
             try {
-                if (this.query.studentAcademy === '' && this.query.userName === '') {
-                    this.$message.error('搜索内容为空');
-                    return;
-                }
                 this.getData();
             } catch (e) {
                 this.$message.error('搜索失败');
@@ -237,9 +250,8 @@ export default {
             this.form.studentNumber = '';
             this.form.studentAcademy = '';
             this.form.studentClass = '';
-            this.form.studentName = '';
+            this.form.userName = '';
             this.form.studentGrade = '';
-            this.form.studentName = '';
             this.form.photoUrl = '';
             this.imageUrl = '';
             this.file = '';
@@ -300,7 +312,7 @@ export default {
             this.form.studentNumber = row.studentNumber;
             this.form.studentAcademy = row.studentAcademy;
             this.form.studentClass = row.studentClass;
-            this.form.studentName = row.studentName;
+            this.form.userName = row.userName;
             this.form.studentGrade = row.studentGrade;
             this.form.isUpload = false;
             this.form.isChange = false;
@@ -319,7 +331,7 @@ export default {
                 }
                 studentUpdate(this.form).then((res) => {
                     if (res.code == 1) {
-                        this.$message.success('更新失败');
+                        this.$message.success('更新成功');
                         this.getData();
                         this.clearForm();
                         this.$set(this.studentList, this.form);
@@ -357,10 +369,10 @@ export default {
                 this.$message.error('上传失败');
             });
         },
-        importSuccess(){
+        importSuccess() {
             this.$message.success('导入成功');
         },
-        importFail(){
+        importFail() {
             this.$message.error('导入失败');
         },
         handleRemove() {
@@ -442,8 +454,12 @@ export default {
     display: block;
 }
 
+.handle-select {
+    width: 200px;
+}
+
 .handle-input {
-    width: 300px;
+    width: 200px;
     display: inline-block;
 }
 </style>
