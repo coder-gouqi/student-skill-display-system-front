@@ -18,7 +18,9 @@
                 <el-input v-model='query.userName' placeholder='学生姓名' class='handle-input mr10'></el-input>
                 <el-select value-key='id' v-model='query.academyName' placeholder='学院名称'
                            class='handle-select mr10'
-                           @change='selectChange'>
+                           @change='selectChange'
+                           clearable
+                           filterable>
                     <el-option
                         v-for='item in academyList'
                         :key='item.id'
@@ -97,7 +99,20 @@
                     <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='学院'>
-                    <el-input v-model='form.studentAcademy' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.academyName' placeholder='学院名称'
+                                   class='handle-select mr10'
+                                   @change='selectAddChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in academyList'
+                                :key='item.id'
+                                :label='item.academyName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='班级'>
                     <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
@@ -138,7 +153,20 @@
                     <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='学院'>
-                    <el-input v-model='form.studentAcademy' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.studentAcademy' placeholder='学院名称'
+                                   class='handle-select mr10'
+                                   @change='selectEditChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in academyList'
+                                :key='item.id'
+                                :label='item.academyName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='班级'>
                     <el-input v-model='form.studentClass' @change='isChange' style='width: 360px'></el-input>
@@ -177,7 +205,6 @@
 <script>
 
 import { studentAdd, studentDelete, studentQuery, studentUpdate, studentUpload } from '../../api/student';
-import { hostUrl } from '@/api/http';
 import { academySelectAll } from '@/api/academy';
 
 export default {
@@ -203,6 +230,7 @@ export default {
                 id: '',
                 studentNumber: '',
                 studentAcademy: '',
+                studentAcademyId: '',
                 studentClass: '',
                 userName: '',
                 studentGrade: '',
@@ -236,6 +264,14 @@ export default {
         selectChange(val) {
             this.query.studentAcademyId = val.id;
         },
+        selectAddChange(val) {
+            this.form.studentAcademyId = val.id;
+            this.form.isChange = true;
+        },
+        selectEditChange(val) {
+            this.form.studentAcademyId = val.id;
+            this.form.isChange = true;
+        },
         // 触发搜索按钮
         handleSearch() {
             try {
@@ -249,6 +285,7 @@ export default {
             this.form.id = '';
             this.form.studentNumber = '';
             this.form.studentAcademy = '';
+            this.form.studentAcademyId = '';
             this.form.studentClass = '';
             this.form.userName = '';
             this.form.studentGrade = '';
@@ -311,6 +348,12 @@ export default {
             this.form.id = row.id;
             this.form.studentNumber = row.studentNumber;
             this.form.studentAcademy = row.studentAcademy;
+            let len = this.academyList.length;
+            for (let i = 0; i < len; i++) {
+                if (this.academyList[i].academyName === row.studentAcademy) {
+                    this.form.studentAcademyId = this.academyList[i].id;
+                }
+            }
             this.form.studentClass = row.studentClass;
             this.form.userName = row.userName;
             this.form.studentGrade = row.studentGrade;
@@ -322,13 +365,13 @@ export default {
         saveEdit() {
             if (this.form.isUpload || this.form.isChange) {
                 this.editVisible = false;
-                if (this.form.isUpload) {
-                    this.form.photoUrl = this.TempPhotoUrl;
-                } else {
-                    const str = this.form.photoUrl;
-                    const reg = new RegExp(hostUrl, '');
-                    this.form.photoUrl = str.replace(reg, '');
-                }
+                // if (this.form.isUpload) {
+                //     this.form.photoUrl = this.TempPhotoUrl;
+                // } else {
+                //     const str = this.form.photoUrl;
+                //     const reg = new RegExp(hostUrl, '');
+                //     this.form.photoUrl = str.replace(reg, '');
+                // }
                 studentUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新成功');

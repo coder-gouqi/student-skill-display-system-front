@@ -28,7 +28,8 @@
             >
                 <el-table-column prop='id' label='学院id' align='center' v-if='false'></el-table-column>
                 <el-table-column prop='academyName' label='学院名称' align='center'></el-table-column>
-                <el-table-column prop='academyInfo' label='学院简介' align='center'></el-table-column>
+                <el-table-column :show-overflow-tooltip='true' prop='academyInfo' label='学院简介'
+                                 align='center'></el-table-column>
                 <el-table-column label='照片' align='center'>
                     <template slot-scope='scope'>
                         <el-image
@@ -189,10 +190,6 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             try {
-                if (this.query.academyName === '' && this.query.academyInfo === '') {
-                    this.$message.error('搜索内容为空');
-                    return;
-                }
                 this.getData();
             } catch (e) {
                 this.$message.error('搜索失败');

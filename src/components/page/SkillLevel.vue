@@ -108,7 +108,7 @@ export default {
             query: {
                 current: 1,
                 pageSize: 10,
-                sortField: '',
+                sortField: 'skill_level',
                 sortOrder: 'ascend'
             },
             id: '',

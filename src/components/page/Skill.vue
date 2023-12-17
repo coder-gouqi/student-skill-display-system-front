@@ -19,7 +19,12 @@
             >
                 <el-table-column prop='id' label='学生id' align='center' v-if='false'></el-table-column>
                 <el-table-column prop='studentName' label='学生姓名' align='center'></el-table-column>
-                <el-table-column prop='studentSkillScore' label='能力指标名称' align='center'></el-table-column>
+                <el-table-column align='center' v-for='(item,index) in skillList[0].studentSkillScore' :key='index'>
+                    <template slot='header'>
+                        {{ item.skillIndexName }}
+                    </template>
+                    <template slot-scope='scope'>{{ scope.row.studentSkillScore[index].skillIndexScore }}</template>
+                </el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
                         <el-button
@@ -54,7 +59,10 @@
 
 <script>
 
-import { skillAdd, skillDelete, skillQuery, skillUpdate } from '@/api/skill';
+import { skillQuery } from '@/api/skill';
+import { skillLevelSelectAll } from '@/api/skillLevel';
+
+let myChart;
 
 export default {
     name: 'skill',
@@ -66,8 +74,14 @@ export default {
                 sortField: '',
                 sortOrder: 'ascend'
             },
+            echartsNow: {
+                studentName: '',
+                studentSkillIndexName: [],
+                studentSkillScore: []
+            },
             id: '',
             skillList: [],
+            skillLevelList: [],
             editVisible: false,
             addVisible: false,
             form: {
@@ -87,100 +101,67 @@ export default {
         this.myEcharts();
     },
     methods: {
-        getData() {
-            skillQuery(this.query).then(res => {
+        async getData() {
+            await skillQuery(this.query).then(res => {
                 this.skillList = res.data.records;
                 this.total = res.data.total || 0;
             });
+           await skillLevelSelectAll().then(res => {
+                this.skillLevelList = res.data;
+            });
+            let skillScoreLen = this.skillList[0].studentSkillScore.length;
+            for (let j = 0; j < skillScoreLen; j++) {
+                this.echartsNow.studentSkillIndexName.push({
+                    name: this.skillList[0].studentSkillScore[j].skillIndexName,
+                    max: this.skillLevelList.length
+                });
+            }
         },
         clearForm() {
             this.form.id = '';
             this.form.studentSkillScore = '';
             this.form.studentName = '';
         },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('是否确认删除？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    skillDelete(row).then((res) => {
-                        if (res.code == 1) {
-                            this.$message.success('删除成功');
-                            this.skillList.splice(index, 1);
-                        } else {
-                            this.$message.error('删除失败');
-                        }
-                    });
-                })
-                .catch(() => {
-                });
-        },
-        // 添加操作
-        handleAdd() {
-            this.addVisible = true;
-            this.clearForm();
-            this.$set(this.form);
-        },
-        saveAdd() {
-            if (this.form.isChange) {
-                this.addVisible = false;
-                skillAdd(this.form).then((res) => {
-                    if (res.code == 1) {
-                        this.$message.success('添加成功');
-                        this.getData();
-                        this.clearForm();
-                        this.$set(this.skillList, this.form);
-                    }
-                });
-            } else {
-                this.$message.error('添加失败');
-                return false;
-            }
-        },
         isChange() {
             this.form.isChange = true;
         },
         // 编辑操作
-        handleEdit(index, row) {
+        async handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
             this.form.id = row.id;
-            this.form.studentSkillScore = row.studentSkillScore;
-            this.form.studentName = row.studentName;
-            this.form.isChange = false;
-            this.$set(this.form);
-        },
-        // 保存编辑
-        saveEdit() {
-            if (this.form.isChange) {
-                this.editVisible = false;
-                skillUpdate(this.form).then((res) => {
-                    if (res.code == 1) {
-                        this.$message.success('更新成功');
-                        this.getData();
-                        this.clearForm();
-                        this.$set(this.skillList, this.form);
-                    } else {
-                        this.$message.error('更新失败');
+            this.echartsNow.studentName = row.studentName;
+            let skillLen = this.skillList.length;
+            let skillLevelLen = this.skillLevelList.length;
+            let result;
+            for (let i = 0; i < skillLen; i++) {
+                if (this.skillList[i].studentName === row.studentName) {
+                    let skillScoreLen = this.skillList[i].studentSkillScore.length;
+                    for (let j = 0; j < skillScoreLen; j++) {
+                        let tmp = this.skillList[i].studentSkillScore[j].skillIndexScore;
+                        for (let k = 0; k < skillLevelLen; k++) {
+                            if (tmp >= this.skillLevelList[k].start && tmp <= this.skillLevelList[k].end) {
+                                result = this.skillLevelList[k].skillLevel;
+                                break;
+                            }
+                        }
+                        this.echartsNow.studentSkillScore.push(result);
                     }
-                }).catch(() => {
-                    this.$message.error('更新失败');
-                });
-            } else {
-                this.$message.error('更新失败');
-                return false;
+                }
             }
+            this.form.isChange = false;
         },
         // 分页导航
         handlePageChange(val) {
             this.query.current = val;
             this.getData();
         },
-        myEcharts() {
+        async myEcharts() {
+            if (myChart != null) {
+                myChart.dispose();//销毁
+            }
             // 基于准备好的dom，初始化echarts实例
-            const myChart = this.$echarts.init(document.getElementById('main'));
+            myChart = this.$echarts.init(document.getElementById('main'));
 
             // 指定图表的配置项和数据
             const option = {
@@ -188,18 +169,11 @@ export default {
                     text: '学生能力等级雷达图'
                 },
                 legend: {
-                    data: ['张三']
+                    data: [this.echartsNow.studentName]
                 },
                 radar: {
                     // shape: 'circle',
-                    indicator: [
-                        { name: '数理水平', max: 100 },
-                        { name: '专业技能', max: 100 },
-                        { name: '动手实践', max: 100 },
-                        { name: '外语水平', max: 100 },
-                        { name: '文化素养', max: 100 },
-                        { name: '身体素质', max: 100 }
-                    ]
+                    indicator: this.echartsNow.studentSkillIndexName
                 },
                 series: [
                     {
@@ -207,8 +181,8 @@ export default {
                         type: 'radar',
                         data: [
                             {
-                                value: [12, 34, 68, 89, 68, 45],
-                                name: '张三'
+                                value: this.echartsNow.studentSkillScore,
+                                name: this.echartsNow.studentName
                             }
                         ]
                     }
@@ -224,6 +198,7 @@ export default {
             this.$nextTick(() => {
                 //  执行echarts方法
                 this.myEcharts();
+                this.echartsNow.studentSkillScore = [];
             });
         }
     }

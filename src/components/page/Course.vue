@@ -18,7 +18,9 @@
                 <el-input v-model='query.courseName' placeholder='课程名称' class='handle-input mr10'></el-input>
                 <el-select value-key='id' v-model='query.skillIndexName' placeholder='技能指标'
                            class='handle-select mr10'
-                           @change='selectChange'>
+                           @change='selectChange'
+                           clearable
+                           filterable>
                     <el-option
                         v-for='item in skillIndexList'
                         :key='item.id'
@@ -47,7 +49,7 @@
             >
                 <el-table-column prop='id' label='课程id' align='center' v-if='false'></el-table-column>
                 <el-table-column prop='courseName' label='课程名称' align='center'></el-table-column>
-                <el-table-column prop='courseSkillIndex' label='所属技能指标' align='center'></el-table-column>
+                <el-table-column prop='courseSkillIndexName' label='所属技能指标' align='center'></el-table-column>
                 <el-table-column prop='courseWeight' label='权重' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>
                     <template slot-scope='scope'>
@@ -86,7 +88,20 @@
                     <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='所属技能指标'>
-                    <el-input v-model='form.courseSkillIndex' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.courseSkillIndexName' placeholder='技能指标名称'
+                                   class='handle-select mr10'
+                                   @change='selectAddChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in skillIndexList'
+                                :key='item.id'
+                                :label='item.skillIndexName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='权重'>
                     <el-input v-model='form.courseWeight' @change='isChange' style='width: 360px'></el-input>
@@ -105,7 +120,20 @@
                     <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
                 <el-form-item label='所属技能指标'>
-                    <el-input v-model='form.courseSkillIndex' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.courseSkillIndexName' placeholder='技能指标名称'
+                                   class='handle-select mr10'
+                                   @change='selectEditChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in skillIndexList'
+                                :key='item.id'
+                                :label='item.skillIndexName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='权重'>
                     <el-input v-model='form.courseWeight' @change='isChange' style='width: 360px'></el-input>
@@ -122,7 +150,7 @@
 <script>
 
 import { courseAdd, courseDelete, courseQuery, courseUpdate } from '@/api/course';
-import { skillQuery } from '@/api/skill';
+import { skillIndexSelectAll } from '@/api/skillIndex';
 
 export default {
     name: 'course',
@@ -133,6 +161,7 @@ export default {
                 pageSize: 10,
                 courseName: '',
                 skillIndexName: '',
+                courseSkillIndexId: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
@@ -144,7 +173,8 @@ export default {
             form: {
                 id: '',
                 courseName: '',
-                courseSkillIndex: '',
+                courseSkillIndexId: '',
+                courseSkillIndexName: '',
                 courseWeight: '',
                 isChange: false
             },
@@ -161,23 +191,13 @@ export default {
                 this.courseList = res.data.records;
                 this.total = res.data.total || 0;
             });
-            let params = {
-                current: 1,
-                pageSize: 10,
-                sortField: '',
-                sortOrder: 'ascend'
-            };
-            skillQuery(params).then(res => {
-                this.skillIndexList = res.data().records;
+            skillIndexSelectAll().then(res => {
+                this.skillIndexList = res.data;
             });
         },
         // 触发搜索按钮
         handleSearch() {
             try {
-                if (this.query.courseName === '' && this.query.skillIndexName === '') {
-                    this.$message.error('搜索内容为空');
-                    return;
-                }
                 this.getData();
             } catch (e) {
                 this.$message.error('搜索失败');
@@ -188,10 +208,21 @@ export default {
             this.query.courseSkillIndexId = val.id;
             this.query.skillIndexName = val.skillIndexName;
         },
+        selectAddChange(val) {
+            this.form.courseSkillIndexId = val.id;
+            this.form.courseSkillIndexName = val.skillIndexName;
+            this.form.isChange = true;
+        },
+        selectEditChange(val) {
+            this.form.courseSkillIndexId = val.id;
+            this.form.courseSkillIndexName = val.skillIndexName;
+            this.form.isChange = true;
+        },
         clearForm() {
             this.form.id = '';
             this.form.courseName = '';
-            this.form.courseSkillIndex = '';
+            this.form.courseSkillIndexId = '';
+            this.form.courseSkillIndexName = '';
             this.form.courseWeight = '';
         },
         // 删除操作
@@ -244,7 +275,13 @@ export default {
             this.idx = index;
             this.form.id = row.id;
             this.form.courseName = row.courseName;
-            this.form.courseSkillIndex = row.courseSkillIndex;
+            this.form.courseSkillIndexName = row.courseSkillIndexName;
+            let len = this.skillIndexList.length;
+            for (let i = 0; i < len; i++) {
+                if (this.skillIndexList[i].skillIndexName === row.courseSkillIndexName) {
+                    this.form.courseSkillIndexId = this.skillIndexList[i].id;
+                }
+            }
             this.form.courseWeight = row.courseWeight;
             this.form.isChange = false;
             this.$set(this.form);

@@ -15,8 +15,19 @@
                     @click='handleAdd'
                 >添加学生成绩
                 </el-button>
-                <el-input v-model='query.studentName' placeholder='学生姓名' class='handle-input mr10'></el-input>
-                <el-input v-model='query.courseName' placeholder='课程名称' class='handle-input mr10'></el-input>
+                <el-input v-model='query.studentNumber' placeholder='学生学号' class='handle-input mr10'></el-input>
+                <el-select value-key='id' v-model='query.courseName' placeholder='课程名称'
+                           class='handle-select mr10'
+                           @change='selectChange'
+                           clearable
+                           filterable>
+                    <el-option
+                        v-for='item in courseList'
+                        :key='item.id'
+                        :label='item.courseName'
+                        :value='item'>
+                    </el-option>
+                </el-select>
                 <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
                 <el-upload
                     action=' http://localhost:8080/system/excel/import?type=score'
@@ -74,7 +85,20 @@
         <el-dialog title='添加' :visible.sync='addVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='课程名称'>
-                    <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.courseName' placeholder='课程名称'
+                                   class='handle-select mr10'
+                                   @change='selectAddChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in courseList'
+                                :key='item.id'
+                                :label='item.courseName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
@@ -93,7 +117,20 @@
         <el-dialog title='编辑' :visible.sync='editVisible' width='50%'>
             <el-form :model='form' label-width='120px'>
                 <el-form-item label='课程名称'>
-                    <el-input v-model='form.courseName' @change='isChange' style='width: 360px'></el-input>
+                    <template>
+                        <el-select value-key='id' v-model='form.courseName' placeholder='课程名称'
+                                   class='handle-select mr10'
+                                   @change='selectEditChange'
+                                   clearable
+                                   filterable>
+                            <el-option
+                                v-for='item in courseList'
+                                :key='item.id'
+                                :label='item.courseName'
+                                :value='item'>
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
@@ -113,6 +150,8 @@
 <script>
 
 import { scoreAdd, scoreDelete, scoreQuery, scoreUpdate } from '@/api/score';
+import { studentSelectAll } from '@/api/student';
+import { courseSelectAll } from '@/api/course';
 
 export default {
     name: 'score',
@@ -121,8 +160,10 @@ export default {
             query: {
                 current: 1,
                 pageSize: 10,
-                studentName: '',
+                studentNumber: '',
+                studentId: '',
                 courseName: '',
+                courseId: '',
                 sortField: '',
                 sortOrder: 'ascend'
             },
@@ -135,7 +176,9 @@ export default {
             form: {
                 id: '',
                 studentName: '',
+                studentId: '',
                 courseName: '',
+                courseId: '',
                 studentScore: '',
                 isChange: false
             },
@@ -152,12 +195,37 @@ export default {
                 this.scoreList = res.data.records;
                 this.total = res.data.total || 0;
             });
+            studentSelectAll().then(res => {
+                this.studentList = res.data;
+            });
+            courseSelectAll().then(res => {
+                this.courseList = res.data;
+            });
+        },
+        selectChange(val) {
+            this.query.courseId = val.id;
+        },
+        selectAddChange(val) {
+            this.form.courseId = val.id;
+            this.form.courseName = val.courseName;
+            this.form.isChange = true;
+        },
+        selectEditChange(val) {
+            this.form.courseId = val.id;
+            this.form.courseName = val.courseName;
+            this.form.isChange = true;
         },
         // 触发搜索按钮
         handleSearch() {
             try {
-                if (this.query.courseName === '' && this.query.studentName === '') {
-                    this.$message.error('搜索内容为空');
+                let studentLen = this.studentList.length;
+                for (let i = 0; i < studentLen; i++) {
+                    if (this.studentList[i].studentNumber == this.query.studentNumber) {
+                        this.query.studentId = this.studentList[i].id;
+                    }
+                }
+                if (this.query.studentId === '' && this.query.studentNumber !== '') {
+                    this.$message.error('搜索失败');
                     return;
                 }
                 this.getData();
@@ -165,11 +233,14 @@ export default {
                 this.$message.error('搜索失败');
             }
             this.$message.success('搜索成功');
+            this.query.studentId = '';
         },
         clearForm() {
             this.form.id = '';
             this.form.studentName = '';
+            this.form.studentId = '';
             this.form.courseName = '';
+            this.form.courseId = '';
             this.form.studentScore = '';
         },
         // 删除操作
@@ -200,6 +271,12 @@ export default {
         saveAdd() {
             if (this.form.isChange) {
                 this.addVisible = false;
+                let studentLen = this.studentList.length;
+                for (let i = 0; i < studentLen; i++) {
+                    if (this.studentList[i].userName === this.form.studentName) {
+                        this.form.studentId = this.studentList[i].id;
+                    }
+                }
                 scoreAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
@@ -223,6 +300,12 @@ export default {
             this.form.id = row.id;
             this.form.studentName = row.studentName;
             this.form.courseName = row.courseName;
+            let studentLen = this.studentList.length;
+            for (let i = 0; i < studentLen; i++) {
+                if (this.studentList[i].userName === this.form.studentName) {
+                    this.form.studentId = this.studentList[i].id;
+                }
+            }
             this.form.studentScore = row.studentScore;
             this.form.isChange = false;
             this.$set(this.form);
