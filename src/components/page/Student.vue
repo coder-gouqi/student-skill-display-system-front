@@ -30,15 +30,16 @@
                 </el-select>
                 <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
                 <el-upload
-                    action=' http://localhost:8080/system/excel/import?type=student'
+                    action=' http://43.136.130.87:8080/system/excel/import?type=student'
                     class='import'
                     :on-success='importSuccess'
                     :on-error='importFail'
                     multiple
                     :limit='1'
                     :show-file-list='false'>
-                    <el-button class='mr10' type='primary'>导入学生信息</el-button>
+                    <el-button class='mr10' type='success'>导入学生信息</el-button>
                 </el-upload>
+                <el-button class='mr10' type='warning' @click='exportData'>导出学生信息</el-button>
             </div>
             <el-table
                 :data='studentList'
@@ -134,7 +135,7 @@
                         :on-change='uploadFile'
                         :before-upload='beforeAvatarUpload'
                         :on-remove='handleRemove'>
-                        <img v-if='form.photoUrl' :src='form.photoUrl' class='avatar' style='width: 100%'>
+                        <img v-if='form.studentPhoto' :src='form.studentPhoto' class='avatar' style='width: 100%'>
                         <i v-else class='el-icon-plus avatar-uploader-icon'></i>
                     </el-upload>
                     <el-button type='primary' @click='uploadConfirm'>上传</el-button>
@@ -188,7 +189,7 @@
                         :on-change='uploadFile'
                         :before-upload='beforeAvatarUpload'
                         :on-remove='handleRemove'>
-                        <img v-if='form.photoUrl' :src='form.photoUrl' class='avatar' style='width: 100%'>
+                        <img v-if='form.studentPhoto' :src='form.studentPhoto' class='avatar' style='width: 100%'>
                         <i v-else class='el-icon-plus avatar-uploader-icon'></i>
                     </el-upload>
                     <el-button type='primary' @click='uploadConfirm'>上传</el-button>
@@ -204,8 +205,16 @@
 
 <script>
 
-import { studentAdd, studentDelete, studentQuery, studentUpdate, studentUpload } from '../../api/student';
+import {
+    studentAdd,
+    studentDelete,
+    studentExport,
+    studentQuery,
+    studentUpdate,
+    studentUpload
+} from '../../api/student';
 import { academySelectAll } from '@/api/academy';
+import { exportFile, hostUrl } from '@/api/http';
 
 export default {
     name: 'student',
@@ -234,7 +243,7 @@ export default {
                 studentClass: '',
                 userName: '',
                 studentGrade: '',
-                photoUrl: '',
+                studentPhoto: '',
                 isUpload: false,
                 isChange: false
             },
@@ -249,8 +258,8 @@ export default {
     },
     methods: {
         getBaseURLToList(scope) {
-            // return hostUrl + scope.row.photoUrl;
-            return scope.row.photoUrl;
+            return hostUrl + scope.row.studentPhoto;
+            // return scope.row.studentPhoto;
         },
         getData() {
             studentQuery(this.query).then(res => {
@@ -289,7 +298,7 @@ export default {
             this.form.studentClass = '';
             this.form.userName = '';
             this.form.studentGrade = '';
-            this.form.photoUrl = '';
+            this.form.studentPhoto = '';
             this.imageUrl = '';
             this.file = '';
             this.form.isUpload = false;
@@ -322,7 +331,7 @@ export default {
         saveAdd() {
             if (this.form.isUpload || this.form.isChange) {
                 this.addVisible = false;
-                this.form.photoUrl = this.TempPhotoUrl;
+                this.form.studentPhoto = this.TempPhotoUrl;
                 studentAdd(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('添加成功');
@@ -343,8 +352,8 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            // this.form.photoUrl = hostUrl + row.photoUrl;
-            this.form.photoUrl = row.photoUrl;
+            this.form.studentPhoto = hostUrl + row.studentPhoto;
+            // this.form.studentPhoto = row.studentPhoto;
             this.form.id = row.id;
             this.form.studentNumber = row.studentNumber;
             this.form.studentAcademy = row.studentAcademy;
@@ -365,13 +374,13 @@ export default {
         saveEdit() {
             if (this.form.isUpload || this.form.isChange) {
                 this.editVisible = false;
-                // if (this.form.isUpload) {
-                //     this.form.photoUrl = this.TempPhotoUrl;
-                // } else {
-                //     const str = this.form.photoUrl;
-                //     const reg = new RegExp(hostUrl, '');
-                //     this.form.photoUrl = str.replace(reg, '');
-                // }
+                if (this.form.isUpload) {
+                    this.form.studentPhoto = this.TempPhotoUrl;
+                } else {
+                    const str = this.form.studentPhoto;
+                    const reg = new RegExp(hostUrl, '');
+                    this.form.studentPhoto = str.replace(reg, '');
+                }
                 studentUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新成功');
@@ -398,12 +407,13 @@ export default {
         uploadFile(item) {
             this.file = item.raw; // 图片文件
             this.imageUrl = URL.createObjectURL(item.raw); // 图片上传浏览器回显地址
-            this.form.photoUrl = this.imageUrl;
+            this.form.studentPhoto = this.imageUrl;
             this.$set(this.form);
         },
         async uploadConfirm() {
             const form = new FormData();
             form.append('file', this.file);
+            form.append('type', 'student');
             this.form.isUpload = true;
             await studentUpload(form).then((res) => {
                 this.TempPhotoUrl = res;
@@ -417,6 +427,16 @@ export default {
         },
         importFail() {
             this.$message.error('导入失败');
+        },
+        async exportData() {
+            await studentExport().then(res => {
+                try {
+                    exportFile(res, 'user.xlsx');
+                    this.$message.success('导出成功');
+                } catch (e) {
+                    this.$message.error('导出失败');
+                }
+            });
         },
         handleRemove() {
             this.file = '';

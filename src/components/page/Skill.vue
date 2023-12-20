@@ -106,16 +106,9 @@ export default {
                 this.skillList = res.data.records;
                 this.total = res.data.total || 0;
             });
-           await skillLevelSelectAll().then(res => {
+            await skillLevelSelectAll().then(res => {
                 this.skillLevelList = res.data;
             });
-            let skillScoreLen = this.skillList[0].studentSkillScore.length;
-            for (let j = 0; j < skillScoreLen; j++) {
-                this.echartsNow.studentSkillIndexName.push({
-                    name: this.skillList[0].studentSkillScore[j].skillIndexName,
-                    max: this.skillLevelList.length
-                });
-            }
         },
         clearForm() {
             this.form.id = '';
@@ -131,22 +124,35 @@ export default {
             this.idx = index;
             this.form.id = row.id;
             this.echartsNow.studentName = row.studentName;
+            //清空上一个的值
+            this.echartsNow.studentSkillIndexName = [];
+            this.echartsNow.studentSkillScore = [];
+
+            let skillScoreLen = this.skillList[0].studentSkillScore.length;
+            for (let j = 0; j < skillScoreLen; j++) {
+                this.echartsNow.studentSkillIndexName.push({
+                    name: this.skillList[0].studentSkillScore[j].skillIndexName,
+                    max: this.skillLevelList.length
+                });
+            }
             let skillLen = this.skillList.length;
             let skillLevelLen = this.skillLevelList.length;
             let result;
+
             for (let i = 0; i < skillLen; i++) {
                 if (this.skillList[i].studentName === row.studentName) {
                     let skillScoreLen = this.skillList[i].studentSkillScore.length;
                     for (let j = 0; j < skillScoreLen; j++) {
                         let tmp = this.skillList[i].studentSkillScore[j].skillIndexScore;
                         for (let k = 0; k < skillLevelLen; k++) {
-                            if (tmp >= this.skillLevelList[k].start && tmp <= this.skillLevelList[k].end) {
+                            if (tmp >= this.skillLevelList[k].start && tmp < this.skillLevelList[k].end) {
                                 result = this.skillLevelList[k].skillLevel;
+                                this.echartsNow.studentSkillScore.push(result);
                                 break;
                             }
                         }
-                        this.echartsNow.studentSkillScore.push(result);
                     }
+                    break;
                 }
             }
             this.form.isChange = false;

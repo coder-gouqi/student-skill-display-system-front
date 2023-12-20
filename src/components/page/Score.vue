@@ -30,15 +30,16 @@
                 </el-select>
                 <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
                 <el-upload
-                    action=' http://localhost:8080/system/excel/import?type=score'
+                    action=' http://43.136.130.87:8080/system/excel/import?type=score'
                     class='import'
                     :on-success='importSuccess'
                     :on-error='importFail'
                     multiple
                     :limit='1'
                     :show-file-list='false'>
-                    <el-button class='mr10' type='primary'>导入成绩信息</el-button>
+                    <el-button class='mr10' type='success'>导入成绩信息</el-button>
                 </el-upload>
+                <el-button class='mr10' type='warning' @click='exportData'>导出成绩信息</el-button>
             </div>
             <el-table
                 :data='scoreList'
@@ -100,6 +101,9 @@
                         </el-select>
                     </template>
                 </el-form-item>
+                <el-form-item label='学生学号'>
+                    <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
                 <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
@@ -132,6 +136,9 @@
                         </el-select>
                     </template>
                 </el-form-item>
+                <el-form-item label='学生学号'>
+                    <el-input v-model='form.studentNumber' @change='isChange' style='width: 360px'></el-input>
+                </el-form-item>
                 <el-form-item label='学生姓名'>
                     <el-input v-model='form.studentName' @change='isChange' style='width: 360px'></el-input>
                 </el-form-item>
@@ -149,9 +156,10 @@
 
 <script>
 
-import { scoreAdd, scoreDelete, scoreQuery, scoreUpdate } from '@/api/score';
+import { scoreAdd, scoreDelete, scoreExport, scoreQuery, scoreUpdate } from '@/api/score';
 import { studentSelectAll } from '@/api/student';
 import { courseSelectAll } from '@/api/course';
+import { exportFile } from '@/api/http';
 
 export default {
     name: 'score',
@@ -175,6 +183,7 @@ export default {
             addVisible: false,
             form: {
                 id: '',
+                studentNumber: '',
                 studentName: '',
                 studentId: '',
                 courseName: '',
@@ -216,7 +225,7 @@ export default {
             this.form.isChange = true;
         },
         // 触发搜索按钮
-        handleSearch() {
+        async handleSearch() {
             try {
                 let studentLen = this.studentList.length;
                 for (let i = 0; i < studentLen; i++) {
@@ -228,6 +237,7 @@ export default {
                     this.$message.error('搜索失败');
                     return;
                 }
+                this.query.current = 1;
                 this.getData();
             } catch (e) {
                 this.$message.error('搜索失败');
@@ -237,6 +247,7 @@ export default {
         },
         clearForm() {
             this.form.id = '';
+            this.form.studentNumber = '';
             this.form.studentName = '';
             this.form.studentId = '';
             this.form.courseName = '';
@@ -298,6 +309,7 @@ export default {
             this.editVisible = true;
             this.idx = index;
             this.form.id = row.id;
+            this.form.studentNumber = row.studentNumber;
             this.form.studentName = row.studentName;
             this.form.courseName = row.courseName;
             let studentLen = this.studentList.length;
@@ -314,6 +326,12 @@ export default {
         saveEdit() {
             if (this.form.isChange) {
                 this.editVisible = false;
+                let courseLen = this.courseList.length;
+                for (let i = 0; i < courseLen; i++) {
+                    if (this.courseList[i].courseName === this.form.courseName) {
+                        this.form.courseId = this.courseList[i].id;
+                    }
+                }
                 scoreUpdate(this.form).then((res) => {
                     if (res.code == 1) {
                         this.$message.success('更新成功');
@@ -334,6 +352,12 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.query.current = val;
+            let studentLen = this.studentList.length;
+            for (let i = 0; i < studentLen; i++) {
+                if (this.studentList[i].studentNumber == this.query.studentNumber) {
+                    this.query.studentId = this.studentList[i].id;
+                }
+            }
             this.getData();
         },
         importSuccess() {
@@ -341,6 +365,16 @@ export default {
         },
         importFail() {
             this.$message.error('导入失败');
+        },
+        async exportData() {
+            await scoreExport().then(res => {
+                try {
+                    exportFile(res, 'scores.xlsx');
+                    this.$message.success('导出成功');
+                } catch (e) {
+                    this.$message.error('导出失败');
+                }
+            });
         }
     }
 };

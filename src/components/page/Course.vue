@@ -30,15 +30,16 @@
                 </el-select>
                 <el-button type='primary' class='mr10' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
                 <el-upload
-                    action=' http://localhost:8080/system/excel/import?type=course'
+                    action=' http://43.136.130.87:8080/system/excel/import?type=course'
                     class='import'
                     :on-success='importSuccess'
                     :on-error='importFail'
                     multiple
                     :limit='1'
                     :show-file-list='false'>
-                    <el-button class='mr10' type='primary'>导入课程信息</el-button>
+                    <el-button class='mr10' type='success'>导入课程信息</el-button>
                 </el-upload>
+                <el-button class='mr10' type='warning' @click='exportData'>导出课程信息</el-button>
             </div>
             <el-table
                 :data='courseList'
@@ -149,8 +150,9 @@
 
 <script>
 
-import { courseAdd, courseDelete, courseQuery, courseUpdate } from '@/api/course';
+import { courseAdd, courseDelete, courseExport, courseQuery, courseUpdate } from '@/api/course';
 import { skillIndexSelectAll } from '@/api/skillIndex';
+import { exportFile } from '@/api/http';
 
 export default {
     name: 'course',
@@ -317,6 +319,16 @@ export default {
         },
         importFail() {
             this.$message.error('导入失败');
+        },
+        async exportData() {
+            await courseExport().then(res => {
+                try {
+                    exportFile(res, 'courses.xlsx');
+                    this.$message.success('导出成功');
+                } catch (e) {
+                    this.$message.error('导出失败');
+                }
+            });
         }
     }
 };

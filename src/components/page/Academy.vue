@@ -178,8 +178,8 @@ export default {
     },
     methods: {
         getBaseURLToList(scope) {
-            // return hostUrl + scope.row.academyPhoto;
-            return scope.row.academyPhoto;
+            return hostUrl + scope.row.academyPhoto;
+            // return scope.row.academyPhoto;
         },
         getData() {
             academyQuery(this.query).then(res => {
@@ -254,8 +254,8 @@ export default {
         handleEdit(index, row) {
             this.editVisible = true;
             this.idx = index;
-            // this.form.academyPhoto = hostUrl + row.academyPhoto;
-            this.form.academyPhoto = row.academyPhoto;
+            this.form.academyPhoto = hostUrl + row.academyPhoto;
+            // this.form.academyPhoto = row.academyPhoto;
             this.form.id = row.id;
             this.form.academyName = row.academyName;
             this.form.academyInfo = row.academyInfo;
@@ -306,6 +306,7 @@ export default {
         async uploadConfirm() {
             const form = new FormData();
             form.append('file', this.file);
+            form.append('type', "academy");
             this.form.isUpload = true;
             await academyUpload(form).then((res) => {
                 this.TempPhotoUrl = res;
