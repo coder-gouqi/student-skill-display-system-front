@@ -50,6 +50,7 @@
             >
                 <el-table-column prop='id' label='学生成绩id' align='center' v-if='false'></el-table-column>
                 <el-table-column prop='courseName' label='课程名称' align='center'></el-table-column>
+                <el-table-column prop='studentNumber' label='学生学号' align='center'></el-table-column>
                 <el-table-column prop='studentName' label='学生姓名' align='center'></el-table-column>
                 <el-table-column prop='studentScore' label='学生成绩' align='center'></el-table-column>
                 <el-table-column label='操作' width='180' align='center'>

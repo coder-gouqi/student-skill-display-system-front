@@ -3,9 +3,9 @@ import axios from 'axios';
 const request = axios.create({
     // 后端接口地址和调用的路径进行拼接
     // 线上地址
-    // baseURL: 'http://43.136.130.87:8080/system/',
+    baseURL: 'http://43.136.130.87:8080/system/',
     // 本地开发地址
-    baseURL: 'http://localhost:8080/system/',
+    // baseURL: 'http://localhost:8080/system/',
     //访问超时时间是5秒s
     timeout: 5000,
     withCredentials: true,
