@@ -51,6 +51,7 @@ export default {
                         if (res.data != null) {
                             this.$message.success('登录成功');
                             localStorage.setItem('username', res.data.userName);
+                            localStorage.setItem('roles', res.data.userRole);
                             this.$router.push('/');
                         } else {
                             this.$message.error('登录失败，账号或密码错误');

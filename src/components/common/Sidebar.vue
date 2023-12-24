@@ -9,37 +9,8 @@
             active-text-color='#409EEC'
             router
         >
-            <template v-for='item in items'>
-                <template v-if='item.subs'>
-                    <el-submenu :index='item.index' :key='item.index'>
-                        <template slot='title'>
-                            <i :class='item.icon'></i>
-                            <span slot='title'>{{ item.title }}</span>
-                        </template>
-                        <template v-for='subItem in item.subs'>
-                            <el-submenu
-                                v-if='subItem.subs'
-                                :index='subItem.index'
-                                :key='subItem.index'
-                            >
-                                <template slot='title'>{{ subItem.title }}</template>
-                                <el-menu-item
-                                    v-for='(threeItem,i) in subItem.subs'
-                                    :key='i'
-                                    :index='threeItem.index'
-                                >{{ threeItem.title }}
-                                </el-menu-item>
-                            </el-submenu>
-                            <el-menu-item
-                                v-else
-                                :index='subItem.index'
-                                :key='subItem.index'
-                            >{{ subItem.title }}
-                            </el-menu-item>
-                        </template>
-                    </el-submenu>
-                </template>
-                <template v-else>
+            <template v-for='item in items' v-if='item.visiable'>
+                <template>
                     <el-menu-item :index='item.index' :key='item.index'>
                         <i :class='item.icon'></i>
                         <span slot='title'>{{ item.title }}</span>
@@ -61,50 +32,69 @@ export default {
                 {
                     icon: 'el-icon-s-home',
                     index: 'welcome',
-                    title: '欢迎页'
+                    title: '欢迎页',
+                    visiable: true,
+                    roles: ['student', 'admin']
                 },
                 {
                     icon: 'el-icon-reading',
                     index: 'student',
-                    title: '学生信息管理'
+                    title: '学生信息管理',
+                    visiable: true,
+                    roles: ['admin']
                 },
                 {
                     icon: 'el-icon-notebook-2',
                     index: 'course',
-                    title: '课程信息管理'
+                    title: '课程信息管理',
+                    visiable: true,
+                    roles: ['admin']
                 },
                 {
                     icon: 'el-icon-document',
                     index: 'score',
-                    title: '学生成绩管理'
+                    title: '学生成绩管理',
+                    visiable: true,
+                    roles: ['admin']
                 },
                 {
                     icon: 'el-icon-office-building',
                     index: 'academy',
-                    title: '学院信息管理'
+                    title: '学院信息管理',
+                    visiable: true,
+                    roles: ['admin']
                 },
                 {
                     icon: 'el-icon-s-flag',
                     index: 'skillIndex',
-                    title: '技能指标管理'
+                    title: '技能指标管理',
+                    visiable: true,
+                    roles: ['admin']
                 },
                 {
                     icon: 'el-icon-s-data',
                     index: 'skillLevel',
-                    title: '技能等级管理'
+                    title: '技能等级管理',
+                    visiable: true,
+                    roles: ['admin']
 
                 },
                 {
                     icon: 'el-icon-s-platform',
                     index: 'skill',
-                    title: '个人技能展示'
+                    title: '个人技能展示',
+                    visiable: true,
+                    roles: ['student', 'admin']
                 },
                 {
                     icon: 'el-icon-user',
                     index: 'personalInfo',
-                    title: '个人信息管理'
+                    title: '个人信息管理',
+                    visiable: true,
+                    roles: ['student']
                 }
-            ]
+            ],
+            role: ''
         };
     },
     computed: {
@@ -112,7 +102,11 @@ export default {
             return this.$route.path.replace('/', '');
         }
     },
-    created() {
+    async created() {
+        this.role = localStorage.getItem('roles');
+        this.items.forEach(element => {
+            element.visiable = element.roles.includes(this.role);
+        });
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
         bus.$on('collapse', msg => {
             this.collapse = msg;

@@ -57,6 +57,9 @@
                         <el-option label='2023级' value='2023级'></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label='密码' prop='userPassword'>
+                    <el-input type='password' v-model='form.userPassword' style='width: 223px'></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type='primary' @click='submitForm'>保存</el-button>
                 </el-form-item>
@@ -81,6 +84,7 @@ export default {
                 studentAcademyId: '',
                 studentClass: '',
                 userName: '',
+                userPassword: '',
                 studentGrade: '',
                 studentPhoto: '',
                 TempPhotoUrl: '',
@@ -146,9 +150,6 @@ export default {
                     return false;
                 }
             });
-        },
-        resetForm() {
-            this.$refs.person.resetFields();
         },
         uploadFile(item) {
             this.file = item.raw;
